@@ -58,5 +58,8 @@ end
 
 AgeM %just to print AgeM
     
-    
+x = extract_terminal_population(AgeM)
+ 
+disp('done')
 
+disp(x)
