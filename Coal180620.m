@@ -38,37 +38,38 @@ lineage_count = 2; %example number of lineages to track
 % lineage_count = 2; 
 
 
-%% Establish Population Structure and PopM matrix %%
+%% Establish Age Distribution Matrix (age_dist_m) %%
 
 time = 1:number_generations; %creates a time vector using the set number of generations
 
 age_dist_m = zeros(length(population_0), length(time)); %creates a matrix with age distributions at each time step
 age_dist_m(:,1) = population_0; %sets the initial age distributions to the initial population values in population_0
 
-total_population = sum(population_0); %calculates the total population at time = 0 by adding the values of population_0
+total_population_0 = sum(population_0); %calculates the total population at time = 0 by adding the values of population_0
 total_population_v = zeros(1, length(t)); %initializes a vector of total population values
-total_population_v(1) = total_population; %sets the first 
+total_population_v(1) = total_population_0; %sets the first entry of the total population vector equal to the initial total population
 
 for i = 2:length(t)
-    age_dist_m(:,i) = round(leslie_matrix*age_dist_m(:,i-1)); %Apply the leslie matrix to the previous population structure for each time step
-    total_population_v(i) = sum(age_dist_m(:,i)); %sums the total population of each generation (just for analysis)
+    age_dist_m(:,i) = round(leslie_matrix*age_dist_m(:,i-1)); %applies the leslie matrix to the previous age distribution for each time step
+    total_population_v(i) = sum(age_dist_m(:,i)); %adds the total population at time step i to the total population vector
 end
 
-%% Create the AgeM matrix of individuals %%
-cols = max(Totals); %sets the column dimension of the age structure matrix by determining the maximum population value derived from the Totals vector
+%% Establish a Matrix of Individuals (individuals_m) %%
 
-individuals_m = -1*ones(number_generations,cols); %create a matrix with numgen rows and cols columns where every entry is negative one
+max_population = max(total_population_v); %sets the column dimension of the individuals matrix by determining the maximum population value from the total population vector
+
+individuals_m = -1*ones(number_generations,max_population); %creates a matrix with number_generations rows and max_population columns where every entry is -1
 
 for i = 1:length(t)
-    individuals_m(i,1:age_dist_m(1,i)) = 0; %Boundary case, set the correct number of individuals to age 0
+    individuals_m(i,1:age_dist_m(1,i)) = 0; %boundary case, set the first n individuals to be age zero (using the first index of the age_dist_m matrix)
     for j = 2:length(population_0)
-        index = 1+sum(age_dist_m(1:j-1,i)); %determine the number of individuals already assigned to an age, "+1" because MATLAB indices are inclusive
+        index = 1+sum(age_dist_m(1:j-1,i)); %determine the number of individuals already assigned to an age, "+1" (MATLAB indices are inclusive)
         individuals_m(i,index:(index-1+age_dist_m(j,i))) = j-1; %assign individuals of the next age group to the newest open spaces in the AgeM matrix
     end
 end
 
 
-%% Extract the terminal population and choose two or more lineages to track %%
+%% Extract the Terminal Population and Choose Number of Individuals to Track  %%
 
 terminal_population = extract_terminal_population(age_dist_m); %returns the portion of the last row which contains individuals
 lineage_count = 2; %number of lineages user wants to track, will be updated with user input later. 
