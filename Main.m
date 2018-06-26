@@ -77,12 +77,6 @@ indices = terminal_indices(terminal_population, lineage_count); %function which 
 
 %% Track the lineages to an MRCA %%
 
-
-    
-    
-    
-
-
 %  
 % disp(terminal_population);
 % % ez we'll start with just two hard-coded pairs to find the mrca of.
