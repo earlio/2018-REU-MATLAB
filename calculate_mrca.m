@@ -13,8 +13,6 @@ function time_to_mrca = calculate_mrca(age_a, age_b, current_population, life_ta
             
             % EZ we need a a probability table for offspiring
             
-            
-            
             previous_population = build_previous_population(full_history_table, total_time, t)
             
             age_of_parent = calculate_age_of_parent(previous_population, life_table)

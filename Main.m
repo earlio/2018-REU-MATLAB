@@ -4,6 +4,7 @@
 % "_m" label indicates a matrix
 % "_v" label indicates a vector
 % "dist" = distribution
+
 %% User Inputs %%
 
 % population_0 = input('Input an initial population vector and press enter: ');
@@ -11,7 +12,7 @@
 % leslie_matrix = input('Input a Leslie Matrix and press enter: ');
 % lineage_count = input('Input a number of lineages to track and press enter: ');
 
-%% Example Inputs %% 
+%% Example Inputs %%
 
 %EXAMPLE 1
 % population_0 = [2, 2, 2]; %example initial population vector
@@ -37,7 +38,6 @@ lineage_count = 2; %example number of lineages to track
 % leslie_matrix = [0 0.1 0.1 0.1 0.1 0; 0.95 0 0 0 0 0; 0 0.92 0 0 0 0; 0 0 0.87 0 0 0; 0 0 0 0.56 0 0; 0 0 0 0 0.3 0];
 % lineage_count = 2; 
 
-
 %% Establish Age Distribution Matrix (age_dist_m) %%
 
 time = 1:number_generations; %creates a time vector using the set number of generations
@@ -46,11 +46,12 @@ age_dist_m = zeros(length(population_0), length(time)); %creates a matrix with a
 age_dist_m(:,1) = population_0; %sets the initial age distributions to the initial population values in population_0
 
 total_population_0 = sum(population_0); %calculates the total population at time = 0 by adding the values of population_0
-total_population_v = zeros(1, length(t)); %initializes a vector of total population values
+total_population_v = zeros(1, length(time)); %initializes a vector of total population values
 total_population_v(1) = total_population_0; %sets the first entry of the total population vector equal to the initial total population
 
-for i = 2:length(t)
+for i = 2:length(time)
     age_dist_m(:,i) = round(leslie_matrix*age_dist_m(:,i-1)); %applies the leslie matrix to the previous age distribution for each time step
+    
     total_population_v(i) = sum(age_dist_m(:,i)); %adds the total population at time step i to the total population vector
 end
 
@@ -60,24 +61,26 @@ max_population = max(total_population_v); %sets the column dimension of the indi
 
 individuals_m = -1*ones(number_generations,max_population); %creates a matrix with number_generations rows and max_population columns where every entry is -1
 
-for i = 1:length(t)
+for i = 1:length(time)
     individuals_m(i,1:age_dist_m(1,i)) = 0; %boundary case, set the first n individuals to be age zero (using the first index of the age_dist_m matrix)
+    
     for j = 2:length(population_0)
         index = 1+sum(age_dist_m(1:j-1,i)); %determine the number of individuals already assigned to an age, "+1" (MATLAB indices are inclusive)
-        individuals_m(i,index:(index-1+age_dist_m(j,i))) = j-1; %assign individuals of the next age group to the newest open spaces in the AgeM matrix
+        
+        individuals_m(i,index:(index-1+age_dist_m(j,i))) = j-1; %assign individuals of the next age group to the newest open spaces in the individuals_m matrix
     end
 end
 
-
 %% Extract the Terminal Population and Choose Number of Individuals to Track  %%
 
-terminal_population = extract_terminal_population(age_dist_m); %returns the portion of the last row which contains individuals
-lineage_count = 2; %number of lineages user wants to track, will be updated with user input later. 
+terminal_population = extract_terminal_population2(age_dist_m); %returns the portion of the last row which contains individuals
+
 indices = terminal_indices(terminal_population, lineage_count); %function which returns two random indices from the final row of individuals. 
 
 %% Track the lineages to an MRCA %%
 
-%  
+
+
 % disp(terminal_population);
 % % ez we'll start with just two hard-coded pairs to find the mrca of.
 % 
