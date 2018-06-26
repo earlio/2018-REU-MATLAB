@@ -67,7 +67,6 @@ lineage_a_current_age = 0;
 lineage_b_current_age = 0;
 
 
-mrca = calculate_mrca(lineage_a_current_age, lineage_b_current_age, ...
-    terminal_population, life_table, numgen);
+mrca = calculate_mrca(lineage_a_current_age, lineage_b_current_age, terminal_population, life_table, numgen, PopM, AgeM);
 
 disp(mrca)
