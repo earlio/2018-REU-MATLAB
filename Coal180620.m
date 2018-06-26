@@ -18,7 +18,7 @@
 Po = [2, 2, 2, 5]; %sample initial population vector
 numgen = 20; %sample number of generations
 LM = [0 1 1.1 1.2; 0.6 0 0 0; 0 0.5 0 0; 0 0 0.25 0]; %sample leslie matrix
-
+life_table = [0 0.6 0; 1 0.5 1; 2 0.25 1.1; 3 0 1.12]
 
 %SAMPLE 3
 % Po = [56 72 16 84 23];
@@ -58,8 +58,16 @@ end
 
 AgeM %just to print AgeM
     
-x = extract_terminal_population(AgeM)
+terminal_population = extract_terminal_population(AgeM);
  
-disp('done')
+disp(terminal_population);
+% ez we'll start with just two hard-coded pairs to find the mrca of.
 
-disp(x)
+lineage_a_current_age = 0;
+lineage_b_current_age = 0;
+
+
+mrca = calculate_mrca(lineage_a_current_age, lineage_b_current_age, ...
+    terminal_population, life_table, numgen);
+
+disp(mrca)
