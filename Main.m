@@ -25,6 +25,7 @@ population_0 = [2, 2, 2, 5]; %example initial population vector
 number_generations = 20; %example number of generations
 leslie_matrix = [0 1 1.1 1.2; 0.6 0 0 0; 0 0.5 0 0; 0 0 0.25 0]; %sample leslie matrix
 lineage_count = 2; %example number of lineages to track 
+life_table = [0 0.6 0; 1 0.5 1; 2 0.25 1.1; 3 0 1.2];
 
 %EXAMPLE 3
 % population_0 = [56 72 16 84 23];
@@ -81,18 +82,19 @@ indices = terminal_indices(terminal_population, lineage_count); %function which 
 
 
 
-% disp(terminal_population);
-% % ez we'll start with just two hard-coded pairs to find the mrca of.
-% 
-% lineage_a_current_age = 0;
-% lineage_b_current_age = 0;
-% 
-% 
-% mrca = calculate_mrca(lineage_a_current_age, lineage_b_current_age, ...
-%     terminal_population, life_table, numgen);
-% 
-% disp(mrca)
-% 
-%     
-%     
-% 
+%disp(terminal_population);
+% ez we'll start with just two hard-coded pairs to find the mrca of.
+
+lineage_a_current_age = 0;
+lineage_b_current_age = 0;
+
+
+mrca = calculate_mrca(lineage_a_current_age, lineage_b_current_age, ...
+    terminal_population, life_table, number_generations, age_dist_m, individuals_m);
+
+disp('calculate_mrca returns value : ')
+disp(mrca)
+
+    
+    
+
