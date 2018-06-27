@@ -1,8 +1,12 @@
-function [leslie_matrix] = life_to_leslie(file)
-%Input - a life table in a .csv file in the form of an ages x 3 matrix. Column 1 contains the ages, Column 2 contains survival, Column 3 contains fecundity.  
+function [leslie_matrix] = life_to_leslie(file, sheet, cell_range)
+%Input - a life table in a .csv or an .xlsx file in the form of an ages x 3 matrix. Column 1 contains the ages, Column 2 contains survival, Column 3 contains fecundity.  
 %Output - corresponding Leslie Matrix
 filename = file; %assign the file to a variable
-life_table_m = csvread(filename,2,0); %read the csv file and assign it to a matrix called life_table_m. 2,0 offsets the entries to begin with teh values
+if isequal(filename(end-2:end),'csv')
+    life_table_m = csvread(filename,2,0); %read the csv file and assign it to a matrix called life_table_m. 2,0 offsets the entries to begin with teh values
+elseif isequal(filename(end-2:end),'lsx')
+    life_table_m = xlsread(filename, sheet, cell_range);
+end
 
 [ages] = size(life_table_m,1); %determine the number of rows of the life_table to create a correctly sized leslie matrix
 leslie_matrix = zeros(ages,ages); %create a square leslie matrix with dimension = number of ages in the life table
