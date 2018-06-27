@@ -21,10 +21,11 @@
 % lineage_count = 2; %example number of lineages to track
 
 %EXAMPLE 2
-population_0 = [2, 2, 2, 5]; %example initial population vector
+population_0 = [8, 7, 6, 8]; %example initial population vector
 number_generations = 20; %example number of generations
-leslie_matrix = [0 1 1.1 1.2; 0.6 0 0 0; 0 0.5 0 0; 0 0 0.25 0]; %sample leslie matrix
+leslie_matrix = [0 1 1.1 1.2; 0.6 0 0 0; 0 0.5 0 0; 0 0 0.4 0]; %sample leslie matrix
 lineage_count = 2; %example number of lineages to track 
+life_table = [0 0.6 0; 1 0.5 1; 2 0.25 1.1; 3 0 1.2];
 
 %EXAMPLE 3
 % population_0 = [56 72 16 84 23];
@@ -75,24 +76,34 @@ end
 
 terminal_population = extract_terminal_population2(age_dist_m); %returns the portion of the last row which contains individuals
 
-indices = terminal_indices(terminal_population, lineage_count); %function which returns two random indices from the final row of individuals. 
+age_i = -1; %Choose an within the possible range to choose two individual in the same age class. Enter -1 for two random individuals. 
+initial_values = terminal_indices(terminal_population, lineage_count, age_dist_m, age_i); %function which returns two random indices from the final row of individuals. 
+
+genealogy_m = -1*ones(number_generations, lineage_count, 2); %initialize the 3-D genealogy matrix
+genealogy_m(end,:,1) = initial_values(1,:); genealogy_m(end,:,2) = initial_values(2,:); %set the front row to the indices and the back row to the ages specified in the initial_values matrix
+
+%% Track the lineages to an MRCA %%
+
+[mrca, complete_genealogy] = calc_mrca_b(genealogy_m, leslie_matrix, age_dist_m)
+
 
 %% Track the lineages to an MRCA %%
 
 
 
-% disp(terminal_population);
-% % ez we'll start with just two hard-coded pairs to find the mrca of.
-% 
+%disp(terminal_population);
+% ez we'll start with just two hard-coded pairs to find the mrca of.
+
 % lineage_a_current_age = 0;
 % lineage_b_current_age = 0;
 % 
 % 
 % mrca = calculate_mrca(lineage_a_current_age, lineage_b_current_age, ...
-%     terminal_population, life_table, numgen);
+%     terminal_population, life_table, number_generations, age_dist_m, individuals_m);
 % 
+% disp('calculate_mrca returns value : ')
 % disp(mrca)
-% 
-%     
-%     
-% 
+
+    
+    
+

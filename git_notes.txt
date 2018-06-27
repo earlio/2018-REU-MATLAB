@@ -1,0 +1,57 @@
+git notes
+
+****** 
+** first steps
+******
+
+// initialize a working directory
+git init
+
+// add a file to the staging directory
+git add filename
+
+// re-add all previously added files to the staging directory
+git add -u
+
+// create a commit
+git commit -m "message goes here"
+
+// read commit messages
+git log
+
+** create an empty project in github, *WITHOUT* a readme file
+
+**********
+** branching and merging
+**********
+
+// shows branches
+git branch
+
+// creates new-branch (you should do new work on a new branch and merge with 
+// the master branch when the work is ready to share
+git branch mybranch-new 
+
+// deletes branch
+git branch -d mybranch-to-delete
+
+// switch to mybranch
+git checkout mybranch
+
+// add someone else's githup so you can add your code to your project
+git remote add otherguysremote https://github.com/username/projectname.git
+
+// fetches the master branch from otherguysremote
+git fetch otherguysremote
+
+// pulls the master branch from otherguysremote and tries to merge it
+// with the branch you're on
+git pull otherguysremote
+
+// this attempts a merge between the branch you're on and otherbranch
+git merge otherguysremote/otherbranch 
+
+
+//////////////
+
+
