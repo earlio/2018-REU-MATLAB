@@ -25,7 +25,7 @@ for g = generations:-1:2 %iterate over the generations
         else %case where the individual is not a newborn and age-1 ancestor must be chosen
         %while (k==2) && (genealogy_m(g,k,2) ~= 0) && (genealogy_m(g-1,2,1) == genealogy_m(g-1,1,1))
            age_old = genealogy_m(g,k,2); %set an age variable equal to the current age in lineage k
-           choice = randi(age_dist_m(age_old+1,g-1)); %establish choose a random number within the number of possible options for that age class
+           choice = randi(age_dist_m(age_old,g-1)); %establish choose a random number within the number of possible options for that age class
            if isequal(age_old, 1)
                genealogy_m(g-1,k,1) = choice;
                genealogy_m(g-1,k,2) = 0;
