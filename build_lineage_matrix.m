@@ -10,13 +10,12 @@ function lineage_matrix = build_lineage_matrix(k_vector, current_population, ...
     k_size = size(lineage_matrix, 2);
     
     for current_time = (total_time):-1:2
-        
+        disp("current lineages and ages: ")
         disp(lineage_matrix(current_time,:,1))
-        disp("~~~")
         disp(lineage_matrix(current_time,:,2))
         
         for i = 1:k_size
-        % first we age everyone backward one step and copy thier lineage
+        % first we age everyone backward one step and copy their lineage
      
             lineage_matrix(current_time - 1, i, 2) = (lineage_matrix(current_time, i, 2) - 1);
             % we assume initially that there won't be a coalescent event
@@ -71,11 +70,17 @@ function lineage_matrix = build_lineage_matrix(k_vector, current_population, ...
                     parent = potential_parent_lineages(random_number_choose_parent)
                     
                     lineage_matrix(current_time -1, i, 1) = parent
-   
+                    
+             %       disp(lineage_matrix(current_time -1, i, 2))
+                    lineage_matrix(current_time -1, i, 2) = NaN
+                    
+             %    disp(lineage_matrix(current_time -1, i, 2))
+                else
+                  lineage_matrix(current_time - 1, i, 2) = sampled_age;
                 end
                 
-                % We musn't forget to update the lineage with it's new age
-                lineage_matrix(current_time - 1, i, 2) = sampled_age;
+               
+ 
 
             end
            
