@@ -19,6 +19,7 @@ function lineage_matrix = build_lineage_matrix(k_vector, current_population, ...
         % first we age everyone backward one step and copy thier lineage
      
             lineage_matrix(current_time - 1, i, 2) = (lineage_matrix(current_time, i, 2) - 1);
+            % we assume initially that there won't be a coalescent event
             lineage_matrix(current_time - 1, i, 1) = lineage_matrix(current_time, i, 1);
         end
         
@@ -38,7 +39,7 @@ function lineage_matrix = build_lineage_matrix(k_vector, current_population, ...
                 % remove winning ticket from pool of tickets
                 parent_chances_by_age(winning_ticket) = [];
                 
-                lineage_matrix(current_time - 1, i, 2) = sampled_age;
+
                
                 %% determine whether parent is in sample or outside of sample %%
                 
@@ -57,18 +58,24 @@ function lineage_matrix = build_lineage_matrix(k_vector, current_population, ...
                 else
                     is_in_sample = false
                 end
-                disp("???")
-                potential_parents = lineage_matrix(current_time -1, :, :)
-                potential_parent_lineages = potential_parents(potential_parents(:,:,2) == sampled_age)
-             
-              %  potential_parent_lineages = potential_parents(:,:,2) == sampled_age
-   
-                disp("!!!")
-            %     potential_parents_from_sample = lineage_matrix(lineage_matrix(current_time - 1, :, 2) == sampled_age)
-              
+  
                 if (is_in_sample)
-                   % potential_parents_from_sample = lineage_matrix(current_time - 1, :,2)
+   
+                    potential_parents = lineage_matrix(current_time -1, :, :)
+                    potential_parent_lineages = potential_parents(potential_parents(:,:,2) == sampled_age)
+                    
+                    count_of_potential_parents = size(potential_parent_lineages, 2)
+                    
+                    random_number_choose_parent = randi(count_of_potential_parents) 
+                    
+                    parent = potential_parent_lineages(random_number_choose_parent)
+                    
+                    lineage_matrix(current_time -1, i, 1) = parent
+   
                 end
+                
+                % We musn't forget to update the lineage with it's new age
+                lineage_matrix(current_time - 1, i, 2) = sampled_age;
 
             end
            
