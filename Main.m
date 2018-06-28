@@ -97,7 +97,7 @@ indices = terminal_indices(terminal_population, lineage_count); %function which 
 
 k_vector = zeros(1,1);
 
-mrca_tree = return_tree(k_vector, ...
+mrca_tree = build_lineage_matrix(k_vector, ...
     terminal_population, life_table, number_generations, age_dist_m, individuals_m);
     
 

@@ -12,6 +12,7 @@ function lineage_matrix = build_lineage_matrix(k_vector, current_population, ...
     for current_time = (total_time):-1:2
         
         disp(lineage_matrix(current_time,:,1))
+        disp("~~~")
         disp(lineage_matrix(current_time,:,2))
         
         for i = 1:k_size
@@ -27,14 +28,47 @@ function lineage_matrix = build_lineage_matrix(k_vector, current_population, ...
         for i = 1:k_size
             
             if (lineage_matrix(current_time - 1, i, 2) == -1)
-                disp("*******")
                 
-                winning_ticket = randi(size(parent_chances_by_age, 2))
+                disp(lineage_matrix(:,:,1));
+                disp(lineage_matrix(:,:,2));
                 
-                lineage_matrix(current_time - 1, i, 2) = parent_chances_by_age(winning_ticket)
-                
+                winning_ticket = randi(size(parent_chances_by_age, 2));
+
+                sampled_age = parent_chances_by_age(winning_ticket)
                 % remove winning ticket from pool of tickets
-                parent_chances_by_age(winning_ticket) = []
+                parent_chances_by_age(winning_ticket) = [];
+                
+                lineage_matrix(current_time - 1, i, 2) = sampled_age;
+               
+                %% determine whether parent is in sample or outside of sample %%
+                
+                % get count of all population at time t - 1
+                previous_year_population = full_history_table(current_time - 1, :)
+                population_age_cohort_size = size(previous_year_population(previous_year_population == sampled_age), 2)
+                
+                previous_year_sample_ages = lineage_matrix(current_time - 1, :,2)
+                sample_age_cohort_size = size(previous_year_sample_ages(previous_year_sample_ages == sampled_age), 2)
+                
+                raffle_ticket_parent_is_in_sample = randi(population_age_cohort_size)
+                
+                is_in_sample = false;
+                if (raffle_ticket_parent_is_in_sample  <= sample_age_cohort_size)
+                    is_in_sample = true
+                else
+                    is_in_sample = false
+                end
+                disp("???")
+                potential_parents = lineage_matrix(current_time -1, :, :)
+                potential_parent_lineages = potential_parents(potential_parents(:,:,2) == sampled_age)
+             
+              %  potential_parent_lineages = potential_parents(:,:,2) == sampled_age
+   
+                disp("!!!")
+            %     potential_parents_from_sample = lineage_matrix(lineage_matrix(current_time - 1, :, 2) == sampled_age)
+              
+                if (is_in_sample)
+                   % potential_parents_from_sample = lineage_matrix(current_time - 1, :,2)
+                end
 
             end
            
@@ -128,23 +162,23 @@ end
 
 function parent_chances = generate_parent_chances(full_history_table, life_table, current_time)
         
-        parent_chances = []
-        previous_year_population = full_history_table(current_time - 1, :)
+        parent_chances = [];
+        previous_year_population = full_history_table(current_time - 1, :);
         
         % for each age cohort ...
         for i = 1:size(life_table, 1)
              
             % count the number of lineages ...
-            cohort = size(previous_year_population(previous_year_population == i - 1), 2)
+            cohort = size(previous_year_population(previous_year_population == i - 1), 2);
             
             % and multiply by fecundity ... 
-            potential_offspring_count_by_cohort = ceil(cohort * life_table(i, 3))
+            potential_offspring_count_by_cohort = ceil(cohort * life_table(i, 3));
             
             % then add one 'ticket', with the age of the current age
             % current age chort, for each potential_offspring
             for j = 1:potential_offspring_count_by_cohort
                 
-                parent_chances = [parent_chances, i - 1]
+                parent_chances = [parent_chances, i - 1];
                 
                 
                 
