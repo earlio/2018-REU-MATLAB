@@ -85,16 +85,19 @@ indices = terminal_indices(terminal_population, lineage_count); %function which 
 %disp(terminal_population);
 % ez we'll start with just two hard-coded pairs to find the mrca of.
 
-lineage_a_current_age = 0;
-lineage_b_current_age = 0;
+% lineage_a_current_age = 0;
+% lineage_b_current_age = 0;
+% 
+% 
+% mrca = calculate_mrca(lineage_a_current_age, lineage_b_current_age, ...
+%     terminal_population, life_table, number_generations, age_dist_m, individuals_m);
+% 
+% disp('calculate_mrca returns value : ')
+% disp(mrca)
 
+k_vector = zeros(1,1);
 
-mrca = calculate_mrca(lineage_a_current_age, lineage_b_current_age, ...
+mrca_tree = return_tree(k_vector, ...
     terminal_population, life_table, number_generations, age_dist_m, individuals_m);
-
-disp('calculate_mrca returns value : ')
-disp(mrca)
-
-    
     
 
