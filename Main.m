@@ -74,10 +74,10 @@ max_population = max(total_population_v); %sets the column dimension of the indi
 
 %% Extract the Terminal Population and Choose Number of Individuals to Track  %%
 
-terminal_population = extract_terminal_population2(age_dist_m); %returns the portion of the last row which contains individuals
+%terminal_population = extract_terminal_population2(age_dist_m); %returns the portion of the last row which contains individuals
 
 age_i = -1; %Choose an within the possible range to choose two individual in the same age class. Enter -1 for two random individuals. 
-initial_values = terminal_indices(terminal_population, lineage_count, age_dist_m, age_i); %function which returns two random indices from the final row of individuals. 
+initial_values = terminal_indices(lineage_count, age_dist_m, age_i); %function which returns two random indices from the final row of individuals. 
 
 genealogy_m = -1*ones(number_generations, lineage_count, 2); %initialize the 3-D genealogy matrix
 genealogy_m(end,:,1) = initial_values(1,:); genealogy_m(end,:,2) = initial_values(2,:); %set the front row to the indices and the back row to the ages specified in the initial_values matrix
@@ -85,7 +85,7 @@ genealogy_m(end,:,1) = initial_values(1,:); genealogy_m(end,:,2) = initial_value
 %% Track the lineages to an MRCA %%
 
 [mrca, complete_genealogy,coal_events] = calc_mrca_b(genealogy_m, leslie_matrix, age_dist_m);
-if isequal(mrca, number_generations-1)
+if isequal(mrca, number_generations)
     disp('no mrca')
 else
     mrca

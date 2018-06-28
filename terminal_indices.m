@@ -1,8 +1,8 @@
-function [indices] = terminal_indices(terminal_population, lineage_count, age_dist_m, age)
+function [indices] = terminal_indices(lineage_count, age_dist_m, age)
 %returns a given number of indices in the terminal population
 
 indices = zeros(2, lineage_count); %initializes the indices matrix which will fill the top surface of the genealogy matrix
-
+age_classes = size(age_dist_m,1);
 %% Specified Same Age %%
 if age > -1
 for k = 1:lineage_count
@@ -24,12 +24,16 @@ end
 %% Choose Two Random Individuals %%
 else  
 
-choices = 1:length(terminal_population);
+choices = 1:sum(age_dist_m);
 
 for k = 1:lineage_count
     slot_n = randi(length(choices));
     indices(1,k) = choices(slot_n); %chooses random individuals from the terminal population
     choices(slot_n) = [];
-    indices(2,k) = terminal_population(indices(1,k)); %records the age corresponding to each index
+    for a = 1:age_classes
+        if indices(1,k) <= sum(age_dist_m(end,1:a)) %records the age corresponding to each index
+        indices(2,k) = a-1;
+        end
+    end
 end
 end

@@ -4,9 +4,9 @@ generations = size(genealogy_m,1); %establish the dimentions of the genealogy_m 
 lineages = 1:size(genealogy_m,2); %establish the dimentions of the genealogy_m matrix to set up the loops
 
 coal_count = 0;
-coal_events = -1*ones(length(lineages),3);
+coal_events = -1*ones(length(lineages)-1,3);
 
-time_count = 0; %keeps track of the time, to establish t-mrca
+time_count = 1; %keeps track of the time, to establish t-mrca
 
 for g = generations:-1:2 %iterate over the generations
     options_lower = [1]; %sets a lower bound vector for each age class
@@ -37,7 +37,7 @@ for g = generations:-1:2 %iterate over the generations
             genealogy_m(g-1,k,2) = age_old-1; %set the age of the individual in the previous generation.
             if k>1
                 for r = 1:k-1
-                    if (genealogy_m(g,r,1) ~= 0)
+                    if (genealogy_m(g,r,1) ~= 0) && (genealogy_m(g,k,1) ~= 0)
                     while (genealogy_m(g-1,r,2) == genealogy_m(g-1,k,2)) && (genealogy_m(g-1,r,1) == genealogy_m(g-1,k,1)) %consider the case where two individuals age back to the exact same individual in the previous generation
                         genealogy_m(g-1,k,1) = randi([options_lower(age_old) options_upper(age_old)]); %redraw a new individual if the exact same individual is drawn
                     end
