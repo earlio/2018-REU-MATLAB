@@ -10,7 +10,7 @@ function lineage_matrix = build_lineage_matrix(sample_vector, total_time, genera
         previous_generation = get_previous_population( generational_demographics, current_time);
         
         
-        parent_chances = generate_parent_chances(life_table, previous_generation, generational_demographics, current_time)
+        offspring_assignments = generate_parent_chances(life_table, previous_generation, generational_demographics, current_time)
         
         previous_generation{1} 
         
@@ -61,20 +61,39 @@ function previous_generation = get_previous_population(generational_demographics
     
 end
 
-function parent_chances = generate_parent_chances(life_table, previous_generation, generational_demographics, current_time)
+function offspring_assignments = generate_parent_chances(life_table, previous_generation, generational_demographics, current_time)
 
-    fecundity_vector = life_table(:,3)
+    fecundity_by_age = life_table(:,3)
     
-    number_of_age_cohorts = length(previous_generation)
+    how_many_currently_age_zero = generational_demographics(current_time, 1)
+    offspring_assignments = zeros(2, how_many_currently_age_zero)
+
+    number_of_age_cohorts = length(previous_generation);
     
-    parent_chance_count_by_cohort = zeros(1, size(life_table, 1));
+    offspring_assignments_distributions = cell(number_of_age_cohorts);
     
-    parent_chances = zeros(2, generational_demographics(current_time -1, 1);
+    offspring_assignments_distributions_sum = 0;
     
-    % # of rows in life_table should be == length(previous_generation)
-    for i = 1:number_of_age_cohorts
+    %  We randomly say something like 
+    % "lineage #38 (age 5) has 6 offspring, #39 (age 5) has 2, etc." and 
+    % check that the total # of offspring is large enough.
+    while (offspring_assignments_distributions_sum < how_many_currently_age_zero)
+    %TODO we probably want a loop count break in here in case fecundity is
+    %so low that we never generate a sufficient number of offspring
+        offspring_assignments_distributions_sum = 0;
         
-        parent_chances_by_cohort(i) = ceil(length(previous_generation{i}(1,:)) * fecundity_vector(i))
+        for i = 1:number_of_age_cohorts
         
+            fprintf("age cohort : %f\n", i)
+            offsprings_assignments_distributions{i} = poissrnd(fecundity_by_age(i), 1, length(previous_generation{i}(1,:)));
+            
+            offspring_assignments_distributions_sum = ...
+                offspring_assignments_distributions_sum + sum(offsprings_assignments_distributions{i})
+            
+            celldisp(offsprings_assignments_distributions)
+            %ceil(length(previous_generation{i}(1,:)) * fecundity_by_age(i))
+        
+        end
     end
+    
 end
