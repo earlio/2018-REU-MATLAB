@@ -14,6 +14,19 @@ function lineage_matrix = build_lineage_matrix(sample_vector, total_time, genera
         
         previous_generation{1} 
         
+        % for each each k in the sample
+        
+            % if age > 0
+                % pop an index at random from previous_generation
+                
+            % if age = 0
+                %pop an index at random from offspring_assignments
+        
+            % if age < 0
+                % implies a merger has already taken place: pass same age
+                % and lineage backward
+        
+       %
     end
 
 end
@@ -65,35 +78,70 @@ function offspring_assignments = generate_parent_chances(life_table, previous_ge
 
     fecundity_by_age = life_table(:,3)
     
-    how_many_currently_age_zero = generational_demographics(current_time, 1)
-    offspring_assignments = zeros(2, how_many_currently_age_zero)
+    count_of_currently_age_zero = generational_demographics(current_time, 1)
+    
 
     number_of_age_cohorts = length(previous_generation);
     
-    offspring_assignments_distributions = cell(number_of_age_cohorts);
+    % "[age 5, lineage 2] has 6 offspring, [age 5, lineage 3] has 2, etc." 
+    offspring_assignments_distributions = cell(number_of_age_cohorts, 1);
     
     offspring_assignments_distributions_sum = 0;
-    
-    %  We randomly say something like 
-    % "lineage #38 (age 5) has 6 offspring, #39 (age 5) has 2, etc." and 
+
     % check that the total # of offspring is large enough.
-    while (offspring_assignments_distributions_sum < how_many_currently_age_zero)
-    %TODO we probably want a loop count break in here in case fecundity is
-    %so low that we never generate a sufficient number of offspring
+    attemptCounter = 1
+    while (offspring_assignments_distributions_sum < count_of_currently_age_zero)
+        
+        fprintf("attempt #%d\n", attemptCounter)
+        if (attemptCounter > 100)
+            disp("too many attempts!")
+            break
+        end
+        attemptCounter = attemptCounter + 1
+    %TODO we want a loop count break in here in case fecundity is very low
+    
         offspring_assignments_distributions_sum = 0;
         
         for i = 1:number_of_age_cohorts
         
             fprintf("age cohort : %f\n", i)
-            offsprings_assignments_distributions{i} = poissrnd(fecundity_by_age(i), 1, length(previous_generation{i}(1,:)));
+            offspring_assignments_distributions{i} = poissrnd(fecundity_by_age(i), 1, length(previous_generation{i}(1,:)));
             
             offspring_assignments_distributions_sum = ...
-                offspring_assignments_distributions_sum + sum(offsprings_assignments_distributions{i})
+                offspring_assignments_distributions_sum + sum(offspring_assignments_distributions{i})
             
-            celldisp(offsprings_assignments_distributions)
+            celldisp(offspring_assignments_distributions)
             %ceil(length(previous_generation{i}(1,:)) * fecundity_by_age(i))
         
         end
     end
+    
+    offspring_assignments = zeros(2, offspring_assignments_distributions_sum)
+    offspring_assignments_counter = 1
+    
+    for age_cohort = 1:number_of_age_cohorts
+        
+        number_of_lineages = length(offspring_assignments_distributions{age_cohort}(1,:))
+        for lineage = 1:number_of_lineages
+            
+            individual_number_of_offspring = offspring_assignments_distributions{age_cohort}(1,lineage)
+            
+            for offspring_index = 1:individual_number_of_offspring
+                offspring_assignments(1:2, offspring_assignments_counter) = [age_cohort, lineage]
+                disp("just made an assignment... ")
+                offspring_assignments_counter = offspring_assignments_counter + 1
+                
+            end
+        end
+        
+        
+    end
+    
+    while (length(offspring_assignments(1,:)) > count_of_currently_age_zero)
+        disp("too many offspring ...")
+        remove_index = randi(length(offspring_assignments(1,:)))
+        offspring_assignments( :, remove_index) = []
+    end
+    
     
 end
