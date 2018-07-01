@@ -1,3 +1,5 @@
+
+
 %% Short Hand %%
 
 % "_0" label is time 0
@@ -97,7 +99,13 @@ indices = terminal_indices(terminal_population, lineage_count); %function which 
 
 k_vector = zeros(1,1);
 
-mrca_tree = build_lineage_matrix(k_vector, ...
-    terminal_population, life_table, number_generations, age_dist_m, individuals_m);
-    
+% mrca_tree = build_lineage_matrix(k_vector, ...
+%     terminal_population, life_table, number_generations, age_dist_m, individuals_m);
+
+age_dist_m = transpose(age_dist_m)
+
+mrca_tree = build_lineage_matrix_2(k_vector, number_generations, age_dist_m, life_table, ...
+    terminal_population,  individuals_m);
+
+
 
