@@ -7,7 +7,7 @@ function lineage_matrix = build_lineage_matrix(sample_vector, total_time, genera
     for current_time = (total_time):-1:2
         
         previous_generation = interpolate_previous_population( generational_demographics, current_time);
-        offspring_assignments = generate_parent_chances(life_table, previous_generation, generational_demographics, current_time)
+        offspring_assignments = generate_parent_chances(life_table, previous_generation, lineage_matrix, current_time)
         
         % for each each k in the sample
         
@@ -31,6 +31,8 @@ function lineage_matrix = build_lineage_matrix(sample_vector, total_time, genera
               number_of_cohort_memebers_remaining = length(previous_generation{age_of_sample + 1}(1,:))
               
               aging_backward_random_index = randi(number_of_cohort_memebers_remaining)
+              
+          %    lineage_matrix(current_time - 1, age_of_sample
              %  lineage_matrix(current_time
            end
            
@@ -88,11 +90,14 @@ function previous_generation = interpolate_previous_population(generational_demo
     
 end
 
-function offspring_assignments = generate_parent_chances(life_table, previous_generation, generational_demographics, current_time)
+function offspring_assignments = generate_parent_chances(life_table, previous_generation, lineage_matrix, current_time)
 
     fecundity_by_age = life_table(:,3);
     
-    count_of_currently_age_zero = generational_demographics(current_time, 1);
+   %  the number of age_zero in the sample,
+   lineage_submatrix = lineage_matrix(lineage_matrix(current_time, :, 2) == 0)
+   count_of_currently_age_zero = length(lineage_submatrix(1,:,1))
+ %   count_of_currently_age_zero_in_sample = 1
 
     number_of_age_cohorts = length(previous_generation);
     
@@ -150,11 +155,12 @@ function offspring_assignments = generate_parent_chances(life_table, previous_ge
         
     end
     
-    while (length(offspring_assignments(1,:)) > count_of_currently_age_zero)
-      %  disp("too many offspring ...")
-        remove_index = randi(length(offspring_assignments(1,:)));
-        offspring_assignments( :, remove_index) = [];
-    end
+    % don't think we need this
+%     while (length(offspring_assignments(1,:)) > count_of_currently_age_zero)
+%       %  disp("too many offspring ...")
+%         remove_index = randi(length(offspring_assignments(1,:)));
+%         offspring_assignments( :, remove_index) = [];
+%     end
     
     
 end
