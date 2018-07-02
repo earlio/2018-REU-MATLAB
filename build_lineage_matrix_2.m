@@ -24,18 +24,28 @@ function lineage_matrix = build_lineage_matrix(sample_vector, total_time, genera
        %
        
        for k = 1:sample_size
-
-           age_of_sample = lineage_matrix(current_time, k, 2)
+   
+           age_of_sample = lineage_matrix(current_time, k, 2) 
+           
            if (age_of_sample > 0)
                 
-              number_of_cohort_memebers_remaining = length(previous_generation{age_of_sample + 1}(1,:))
+              number_of_cohort_members_remaining = length(previous_generation{age_of_sample + 1}(1,:))
               
-              aging_backward_random_index = randi(number_of_cohort_memebers_remaining)
+              random_index = randi(number_of_cohort_members_remaining)
+              
+              lineage_matrix(current_time - 1, k, 1) = lineage_matrix(current_time, k, 1);
+              lineage_matrix(current_time - 1, k, 2) = age_of_sample - 1;
+              lineage_matrix(current_time - 1, k, 3) = random_index;
+              
+              previous_generation{age_of_sample + 1}(random_index) = []
               
           %    lineage_matrix(current_time - 1, age_of_sample
              %  lineage_matrix(current_time
+               
            end
            
+        
+    
            
        end
       % lineage_matrix
@@ -139,14 +149,14 @@ function offspring_assignments = generate_parent_chances(life_table, previous_ge
     
     for age_cohort = 1:number_of_age_cohorts
         
-        number_of_lineages = length(offspring_assignments_distributions{age_cohort}(1,:));
+        number_of_lineages = length(offspring_assignments_distributions{age_cohort}(:));
         for lineage = 1:number_of_lineages
             
             individual_number_of_offspring = offspring_assignments_distributions{age_cohort}(1,lineage);
             
             for offspring_index = 1:individual_number_of_offspring
                 offspring_assignments(1:2, offspring_assignments_counter) = [age_cohort, lineage];
-               % disp("just made an assignment... ")
+                disp("just made an assignment... ")
                 offspring_assignments_counter = offspring_assignments_counter + 1;
                 
             end
