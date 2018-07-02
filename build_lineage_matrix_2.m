@@ -30,21 +30,30 @@ function lineage_matrix = build_lineage_matrix(sample_vector, total_time, genera
            if (age_of_sample > 0)
                 
               number_of_cohort_members_remaining = length(previous_generation{age_of_sample + 1}(1,:))
-              
               random_index = randi(number_of_cohort_members_remaining)
               
               lineage_matrix(current_time - 1, k, 1) = lineage_matrix(current_time, k, 1);
               lineage_matrix(current_time - 1, k, 2) = age_of_sample - 1;
-              lineage_matrix(current_time - 1, k, 3) = random_index;
-              
+              lineage_matrix(current_time - 1, k, 3) = random_index;    
               previous_generation{age_of_sample + 1}(random_index) = []
-              
-          %    lineage_matrix(current_time - 1, age_of_sample
-             %  lineage_matrix(current_time
-               
            end
            
-        
+           if (age_of_sample == 0)
+               
+               count_of_available_parent_assignments = length(offspring_assignments(1,:));
+               random_parent_assignment_index = randi(count_of_available_parent_assignments);
+              
+               lineage_matrix(current_time - 1, k, 1) = lineage_matrix(current_time, k, 1);
+               lineage_matrix(current_time - 1, k, 2) = offspring_assignments(1,random_parent_assignment_index);
+               lineage_matrix(current_time - 1, k, 3) = offspring_assignments(2,random_parent_assignment_index);
+               offspring_assignments(:,random_parent_assignment_index) = [];
+           end
+           
+           if (age_of_sample < 0) % do nothing; a merger has already taken place
+               lineage_matrix(current_time - 1, k, 1) = lineage_matrix(current_time, k, 1);
+           end
+           
+           % lineage_matrix updates, now we need logic to identify mergers     
     
            
        end
@@ -63,7 +72,7 @@ function lineage_matrix = initialize_lineage_matrix(k_vector, total_time)
 % for now we're hard-coding the initial vector
 
     sample_size = 4
-    lineage_matrix = NaN(total_time, sample_size ,2);
+    lineage_matrix = NaN(total_time, sample_size ,3);
 
         lineage_matrix(end, 1, 1) = 1;
         lineage_matrix(end, 1, 2) = 0;
@@ -104,7 +113,8 @@ function offspring_assignments = generate_parent_chances(life_table, previous_ge
 
     fecundity_by_age = life_table(:,3);
     
-   %  the number of age_zero in the sample,
+   %  the number of age_zero in the sample, 
+   % TODO non-critical not sure why debugger shows lineage_submatrix as zero
    lineage_submatrix = lineage_matrix(lineage_matrix(current_time, :, 2) == 0)
    count_of_currently_age_zero = length(lineage_submatrix(1,:,1))
  %   count_of_currently_age_zero_in_sample = 1
@@ -156,7 +166,6 @@ function offspring_assignments = generate_parent_chances(life_table, previous_ge
             
             for offspring_index = 1:individual_number_of_offspring
                 offspring_assignments(1:2, offspring_assignments_counter) = [age_cohort, lineage];
-                disp("just made an assignment... ")
                 offspring_assignments_counter = offspring_assignments_counter + 1;
                 
             end
