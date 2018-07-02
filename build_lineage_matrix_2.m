@@ -1,23 +1,13 @@
 function lineage_matrix = build_lineage_matrix(sample_vector, total_time, generational_demographics, life_table, ...
     final_population, full_history_table)
 
-    disp(generational_demographics)
-    
     lineage_matrix = initialize_lineage_matrix(sample_vector, total_time)
     sample_size = length(lineage_matrix(1,:,1))
 
     for current_time = (total_time):-1:2
         
-        previous_generation = get_previous_population( generational_demographics, current_time);
-        celldisp(previous_generation);
-        
-        disp("prev gen run")
-        
+        previous_generation = interpolate_previous_population( generational_demographics, current_time);
         offspring_assignments = generate_parent_chances(life_table, previous_generation, generational_demographics, current_time)
-        
-        previous_generation{1} 
-        
-        
         
         % for each each k in the sample
         
@@ -33,34 +23,35 @@ function lineage_matrix = build_lineage_matrix(sample_vector, total_time, genera
         
        %
        
-       disp(sample_size)
        for k = 1:sample_size
-           disp(k)
-           disp("lineage matrix(current_time, k, 1)")
-           lineage_matrix(current_time, k, 1)
+
            age_of_sample = lineage_matrix(current_time, k, 2)
            if (age_of_sample > 0)
- 
-              index = randi(previous_generation{age_of_sample + 1}(1,:))
+                
+              number_of_cohort_memebers_remaining = length(previous_generation{age_of_sample + 1}(1,:))
+              
+              aging_backward_random_index = randi(number_of_cohort_memebers_remaining)
              %  lineage_matrix(current_time
            end
            
            
        end
       % lineage_matrix
+      
     end
-
+    
+    disp("build_lineage_matrix done")
+    
 end
 
    
 function lineage_matrix = initialize_lineage_matrix(k_vector, total_time)
-% time by sample-size by 3; (sample_lineage, age, nth-element by age group)
+% time x sample-size x 3; (sample_lineage, age, position in age cohort)
 
 % for now we're hard-coding the initial vector
 
-    sample_size = 3
-    lineage_matrix = NaN(total_time, sample_size ,3);
-   % lineage_matrix(:,:,2) = NaN;
+    sample_size = 4
+    lineage_matrix = NaN(total_time, sample_size ,2);
 
         lineage_matrix(end, 1, 1) = 1;
         lineage_matrix(end, 1, 2) = 0;
@@ -68,30 +59,30 @@ function lineage_matrix = initialize_lineage_matrix(k_vector, total_time)
         lineage_matrix(end, 2, 2) = 0;        
         lineage_matrix(end, 3, 1) = 3;
         lineage_matrix(end, 3, 2) = 2;
-        lineage_matrix(:,:,1);
-        lineage_matrix(:,:,2);
+        lineage_matrix(end, 4, 1) = 4;
+        lineage_matrix(end, 4, 2) = 2;
+
 
 end
 
 
 % returns an array of cells of 2 by x matrices - EZ
-function previous_generation = get_previous_population(generational_demographics, current_time)
-
-
+function previous_generation = interpolate_previous_population(generational_demographics, current_time)
     
     previous_demographics = generational_demographics( (current_time - 1), : );
     
     number_of_age_cohorts = length(previous_demographics);
     
-    previous_generation = cell(number_of_age_cohorts);
+    previous_generation = cell(number_of_age_cohorts, 1);
     
     for cohort_age = 1:number_of_age_cohorts
         
         individual_id_list = 1:previous_demographics(cohort_age);
         
-        individual_age_list = ( cohort_age - 1) * ones(1, previous_demographics(cohort_age));
+        % deprecated
+        % individual_age_list = ( cohort_age - 1) * ones(1, previous_demographics(cohort_age));
         
-        previous_generation{cohort_age} = [individual_id_list ; individual_age_list];
+        previous_generation{cohort_age} = [individual_id_list];
    
     end
     
@@ -102,7 +93,6 @@ function offspring_assignments = generate_parent_chances(life_table, previous_ge
     fecundity_by_age = life_table(:,3);
     
     count_of_currently_age_zero = generational_demographics(current_time, 1);
-    
 
     number_of_age_cohorts = length(previous_generation);
     
