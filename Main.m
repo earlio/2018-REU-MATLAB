@@ -58,7 +58,7 @@ end
 
 %% Establish a Matrix of Individuals (individuals_m) %%
 
-max_population = max(total_population_v); %sets the column dimension of the individuals matrix by determining the maximum population value from the total population vector
+%max_population = max(total_population_v); %sets the column dimension of the individuals matrix by determining the maximum population value from the total population vector
 
 % individuals_m = -1*ones(number_generations,max_population); %creates a matrix with number_generations rows and max_population columns where every entry is -1
 % 

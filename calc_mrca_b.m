@@ -18,7 +18,7 @@ for g = generations:-1:2 %iterate over the generations
     for q = 1:length(lineages) %iterate over the number of lineages
         k = lineages(q);
         if genealogy_m(g,k,2) == 0 %case where the individual is a newborn and a parent must be chosen
-            fecundities = round(age_dist_m(:,g-1).*transpose(leslie_matrix(1,:))); %vector of the expected number of offspring from parents of each age class
+            fecundities = round(age_dist_m(:,g-1).*transpose(leslie_matrix(1,:))) %vector of the expected number of offspring from parents of each age class
             parent_age_index = randi(sum(fecundities)); %randomly choose a number from the expected number of offspring
             for a = 1:length(fecundities) %SWITCH TO PROBABILITIES FROM EXPECTED VALUES?
                 if parent_age_index <= sum(fecundities(1:a))
