@@ -10,16 +10,16 @@
 sample_choice = 4; %chooses which sample to test, change this value to change the sample, 1 = Sheep, 2 = Mice, 3 = Sardines, 4 = Primroses
 
 if isequal(sample_choice,1)
-[leslie_matrix, ages]= life_to_leslie('Sample LT1.xlsx','A3:C15');
+[leslie_matrix, ages]= life_to_leslie('Sample_LT1.xlsx','A3:C15');
 
 elseif isequal(sample_choice,2)
-[leslie_matrix, ages] = life_to_leslie('Sample LT2.xlsx','A3:C8');
+[leslie_matrix, ages] = life_to_leslie('Sample_LT2.xlsx','A3:C8');
 
 elseif isequal(sample_choice,3)
-[leslie_matrix, ages] = life_to_leslie('Sample LT3.xlsx','A3:C15');
+[leslie_matrix, ages] = life_to_leslie('Sample_LT3.xlsx','A3:C15');
 
 elseif isequal(sample_choice,4)
-[leslie_matrix, ages] = life_to_leslie('Sample LT4.xlsx','A3:C24');
+[leslie_matrix, ages] = life_to_leslie('Sample_LT4.xlsx','A3:C24');
 
 end
 
