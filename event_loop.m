@@ -26,7 +26,15 @@ end
 %% Normalize the Leslie Matrix %%
 
 lambda = eig(leslie_matrix);
-leslie_matrix = leslie_matrix./lambda(2);
+
+if lambda(1)> 0
+    scaling = lambda(1);
+else
+    scaling = lambda(2);
+end
+
+leslie_matrix = leslie_matrix./scaling;
+
 
 
 %% Set Initial Parameters %%
@@ -38,8 +46,8 @@ leslie_matrix = leslie_matrix./lambda(2);
 % number_iterations = input('Input a number of iterations and press enter: ');
 
 
-population_0 = 10*ones(1,ages); %initial population vector, sets each initial population to 10 for now.
-number_generations = 10; %number of generations,
+population_0 = 25*ones(1,ages); %initial population vector, sets each initial population to 10 for now.
+number_generations = 10000; %number of generations,
 lineage_count = 2; %number of lineages to track, k=2 for now
 number_iterations = 200; %number of times the functions are run
 
