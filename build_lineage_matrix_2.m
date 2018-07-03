@@ -9,7 +9,8 @@ function lineage_matrix = build_lineage_matrix(sample_vector, total_time, genera
         previous_generation = interpolate_previous_population( generational_demographics, current_time);
         offspring_assignments = generate_parent_chances(life_table, previous_generation, lineage_matrix, current_time)
        
-       coalescence_check = zeros(number_of_age_cohorts, sample_size)
+        % for debugging purposes
+        previous_generation_copy = previous_generation;
        
        for k = 1:sample_size
    
@@ -17,13 +18,14 @@ function lineage_matrix = build_lineage_matrix(sample_vector, total_time, genera
            
            if (age_of_sample > 0)
                 
-              number_of_cohort_members_remaining = length(previous_generation{age_of_sample + 1}(1,:))
+              %note: age_of_sample == 1 means we're looking up age 0
+              number_of_cohort_members_remaining = length(previous_generation{age_of_sample}(:))
               random_index = randi(number_of_cohort_members_remaining)
               
               lineage_matrix(current_time - 1, k, 1) = lineage_matrix(current_time, k, 1);
               lineage_matrix(current_time - 1, k, 2) = age_of_sample - 1;
               lineage_matrix(current_time - 1, k, 3) = random_index;    
-              previous_generation{age_of_sample + 1}(random_index) = []
+              previous_generation{age_of_sample}(random_index) = []
            end
            
            if (age_of_sample == 0)
@@ -46,9 +48,7 @@ function lineage_matrix = build_lineage_matrix(sample_vector, total_time, genera
        
        % lineage_matrix updates, now we need logic to identify mergers 
        
-       for age_cohort = 1:number_of_age_cohorts
-           
-       end
+
        
       % lineage_matrix
       
