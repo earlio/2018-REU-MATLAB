@@ -23,6 +23,11 @@ elseif isequal(sample_choice,4)
 
 end
 
+%% Normalize the Leslie Matrix %%
+
+lambda = eig(leslie_matrix);
+leslie_matrix = leslie_matrix./lambda(2);
+
 
 %% Set Initial Parameters %%
 

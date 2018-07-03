@@ -21,11 +21,21 @@
 % lineage_count = 2; %example number of lineages to track
 
 %EXAMPLE 2
-population_0 = [8, 7, 6, 8]; %example initial population vector
-number_generations = 50; %example number of generations
+population_0 = [30, 25, 15, 30]; %example initial population vector
+number_generations = 500; %example number of generations
 leslie_matrix = [0 1 1.1 1.2; 0.6 0 0 0; 0 0.5 0 0; 0 0 0.4 0]; %sample leslie matrix
-lineage_count = 3; %example number of lineages to track 
+lineage_count = 2; %example number of lineages to track 
 %life_table = [0 0.6 0; 1 0.5 1; 2 0.25 1.1; 3 0 1.2];
+
+lambda = eig(leslie_matrix);
+
+if lambda(1)> 0
+    scaling = lambda(1);
+else
+    scaling = lambda(2);
+end
+
+leslie_matrix = leslie_matrix./scaling;
 
 %EXAMPLE 3
 % population_0 = [56 72 16 84 23];
