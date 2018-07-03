@@ -8,20 +8,8 @@ function lineage_matrix = build_lineage_matrix(sample_vector, total_time, genera
         
         previous_generation = interpolate_previous_population( generational_demographics, current_time);
         offspring_assignments = generate_parent_chances(life_table, previous_generation, lineage_matrix, current_time)
-        
-        % for each each k in the sample
-        
-            % if age > 0
-                % pop an index at random from previous_generation
-                
-            % if age = 0
-                %pop an index at random from offspring_assignments
-        
-            % if age < 0
-                % implies a merger has already taken place: pass same age
-                % and lineage backward
-        
-       %
+       
+       coalescence_check = zeros(number_of_age_cohorts, sample_size)
        
        for k = 1:sample_size
    
@@ -43,20 +31,25 @@ function lineage_matrix = build_lineage_matrix(sample_vector, total_time, genera
                count_of_available_parent_assignments = length(offspring_assignments(1,:));
                random_parent_assignment_index = randi(count_of_available_parent_assignments);
               
-               lineage_matrix(current_time - 1, k, 1) = lineage_matrix(current_time, k, 1);
                lineage_matrix(current_time - 1, k, 2) = offspring_assignments(1,random_parent_assignment_index);
                lineage_matrix(current_time - 1, k, 3) = offspring_assignments(2,random_parent_assignment_index);
                offspring_assignments(:,random_parent_assignment_index) = [];
            end
            
-           if (age_of_sample < 0) % do nothing; a merger has already taken place
+           if (age_of_sample == NaN) % do nothing; a merger has already taken place
                lineage_matrix(current_time - 1, k, 1) = lineage_matrix(current_time, k, 1);
-           end
-           
-           % lineage_matrix updates, now we need logic to identify mergers     
-    
+               lineage_matrix(current_time - 1, k, 2) = NaN
+               lineage_matrix(current_time - 1, k, 3) = NaN
+           end 
            
        end
+       
+       % lineage_matrix updates, now we need logic to identify mergers 
+       
+       for age_cohort = 1:number_of_age_cohorts
+           
+       end
+       
       % lineage_matrix
       
     end
