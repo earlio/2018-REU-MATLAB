@@ -104,7 +104,7 @@ k_vector = zeros(1,1);
 
 age_dist_m = transpose(age_dist_m)
 
-mrca_tree = build_lineage_matrix_2(k_vector, number_generations, age_dist_m, life_table, ...
+mrca_tree = build_lineage_matrix(k_vector, number_generations, age_dist_m, life_table, ...
     terminal_population,  individuals_m);
 
 
