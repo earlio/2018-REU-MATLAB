@@ -24,15 +24,16 @@ end
 %% Choose Two Random Individuals %%
 else  
 
-choices = 1:sum(age_dist_m);
+choices = 1:sum(age_dist_m(:,end));
 
 for k = 1:lineage_count
     slot_n = randi(length(choices));
     indices(1,k) = choices(slot_n); %chooses random individuals from the terminal population
     choices(slot_n) = [];
     for a = 1:age_classes
-        if indices(1,k) <= sum(age_dist_m(1:a,end)) %records the age corresponding to each index
+        if (sum(age_dist_m(1:a-1,end)) <= indices(1,k)) && (indices(1,k)<= sum(age_dist_m(1:a,end))) %records the age corresponding to each index
         indices(2,k) = a-1;
+        break
         end
     end
 end
