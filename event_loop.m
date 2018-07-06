@@ -46,10 +46,10 @@ leslie_matrix = leslie_matrix./scaling;
 % number_iterations = input('Input a number of iterations and press enter: ');
 
 
-population_0 = 10*ones(1,ages); %initial population vector, sets each initial population to 10 for now.
-number_generations = 50; %number of generations,
+population_0 = 100*ones(1,ages); %initial population vector, sets each initial population to 10 for now.
+number_generations = 20000; %number of generations,
 lineage_count = 2; %number of lineages to track, k=2 for now
-number_iterations = 1; %number of times the functions are run
+number_iterations = 500; %number of times the functions are run
 
 number_iterations_v = zeros(2,number_iterations); %creates a vector to keep track of data for each iteration
 
@@ -58,6 +58,7 @@ number_iterations_v = zeros(2,number_iterations); %creates a vector to keep trac
 age_dist_m = create_age_dist_m(number_generations, population_0, leslie_matrix); %%calls the function to create the demographic matrix
 
 %% Choose starting indices and establish the genealogy matrix %%
+
 
 
 for j = 1:2
@@ -72,7 +73,7 @@ initial_values = terminal_indices(lineage_count, age_dist_m, age_i); %function w
 genealogy_m = -1*ones(number_generations, lineage_count, 2); %initialize the 3-D genealogy matrix
 genealogy_m(end,:,1) = initial_values(1,:); genealogy_m(end,:,2) = initial_values(2,:); %set the front row to the indices and the back row to the ages specified in the initial_values matrix
 
-[mrca, complete_genealogy,coal_events] = calc_mrca_b(genealogy_m, leslie_matrix, age_dist_m)
+[mrca, complete_genealogy,coal_events] = calc_mrca_b(genealogy_m, leslie_matrix, age_dist_m);
 
 if isequal(age_i,-1)
     number_iterations_v(1,n) = mrca; %sets the first row of number iterations to Ne results
@@ -81,3 +82,5 @@ elseif isequal(age_i,0)
 end
 end
 end
+
+number_iterations_v
