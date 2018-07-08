@@ -41,24 +41,6 @@ life_table = [0 0.6 0; 1 0.5 1; 2 0.25 1.1; 3 0 1.2];
 % leslie_matrix = [0 0.1 0.1 0.1 0.1 0; 0.95 0 0 0 0 0; 0 0.92 0 0 0 0; 0 0 0.87 0 0 0; 0 0 0 0.56 0 0; 0 0 0 0 0.3 0];
 % lineage_count = 2; 
 
-%% Read in a Life Table %%
-
-% provide path name to life table file
-file_path_name = 'Sample_LT1.xlsx';
-fprintf('Life table file: %s\n\n',file_path_name);
-
-% rescale life table so that population size is constant through time
-rescale = true;
-
-[leslie_matrix,age_classes,scaling] = life_to_leslie(file_path_name,rescale);
-
-if rescale == true
-    fprintf('original life table had growth rate of %f\n', scaling);
-    fprintf('life table has been rescaled to constant population size over time\n\n');
-else
-    fprintf('life table has a growth rate of %f\n\n', scaling);
-end
-
 
 %% Establish Age Distribution Matrix (age_dist_m) %%
 
@@ -123,7 +105,7 @@ k_vector = zeros(1,1);
 
 age_dist_m = transpose(age_dist_m)
 
-mrca_tree = build_lineage_matrix(k_vector, number_generations, age_dist_m, life_table, ...
+ [mrca, complete_genealogy, coal_events] = build_lineage_matrix(k_vector, number_generations, age_dist_m, life_table, ...
     terminal_population,  individuals_m);
 
 

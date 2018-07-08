@@ -1,5 +1,12 @@
-function lineage_matrix = build_lineage_matrix(sample_vector, total_time, generational_demographics, life_table, ...
+function  [mrca, complete_genealogy, coal_events] = build_lineage_matrix(sample_vector, total_time, generational_demographics, life_table, ...
     final_population, full_history_table)
+
+    % we'll make total_time = 5000 later
+    total_time = 20;
+    mrca = total_time;
+    complete_genealogy = 1;
+    coal_events = 1;
+
 
     lineage_matrix = initialize_lineage_matrix(sample_vector, total_time)
     sample_size = length(lineage_matrix(1,:,1))
@@ -90,11 +97,16 @@ function lineage_matrix = build_lineage_matrix(sample_vector, total_time, genera
            end
        end
        
-       % lineage_matrix updates, now we need logic to identify mergers 
+       % do we have an mrca?
+       % rewrite this by using a counter after is_coalescent == true
+       raw_lineage_numbers = (lineage_matrix(current_time -1, :, 1));
+       actual_lineage_numbers = raw_lineage_numbers(isfinite(raw_lineage_numbers));
+       dummy = 1;
+       if (length(actual_lineage_numbers) == 1)
+           mrca = total_time - current_time + 1
+           break;
+       end
        
-
-       
-      % lineage_matrix
       
     end
     
