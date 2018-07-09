@@ -1,22 +1,24 @@
 % function  [mrca, complete_genealogy, coal_events] = build_lineage_matrix(sample_vector, total_time, generational_demographics, life_table, ...
 %     final_population, full_history_table)
 
-function  [mrca, complete_genealogy, coal_events] = calc_mrca_ez(genealogy_m, generational_demographics, life_table)
+function  [mrca, complete_genealogy, coal_events] = calc_mrca_ez(genealogy_m, life_table, generational_demographics)
 
 
 
     % we'll make total_time = 5000 later
     
 % START modifications required to work with calling program Main_mbh.m
-    age_dist_m = transpose(generational_demographics)
-    maximum_age = life_table(end, 1);
+    generational_demographics = transpose(generational_demographics);
+    maximum_age = size(life_table, 1);
     % this function was designed for life tables starting at age 0 ...
     life_table(:, 1) = life_table(:, 1) - 1;
     
     % since we're starting with k = 2 I can manually build dample_vector
-    sample_vector = zeros(maximum_age);
-    sample_vector(genealogy_m(end,1,2)) = sample_vector(genealogy_m(end,1,2)) + 1;
-    sample_vector(genealogy_m(end,2,2)) = sample_vector(genealogy_m(end,2,2)) + 1;
+    sample_vector = zeros(1, maximum_age);
+    first = genealogy_m(end,1,2) + 1;
+    second = genealogy_m(end,2,2) + 1;
+    sample_vector(first) = sample_vector(first) + 1;
+    sample_vector(second) = sample_vector(second) + 1;
     
     total_time = size(genealogy_m,1);
     mrca = total_time;
@@ -28,27 +30,25 @@ function  [mrca, complete_genealogy, coal_events] = calc_mrca_ez(genealogy_m, ge
 % END modifications
 
 
-    lineage_matrix = initialize_lineage_matrix(sample_vector, total_time)
-    sample_size = length(lineage_matrix(1,:,1))
+    lineage_matrix = initialize_lineage_matrix(sample_vector, total_time);
+    sample_size = length(lineage_matrix(1,:,1));
 
     for current_time = (total_time):-1:2
         
         previous_generation = interpolate_previous_population( generational_demographics, current_time);
-        offspring_assignments = generate_parent_chances(life_table, previous_generation, lineage_matrix, current_time)
+        offspring_assignments = generate_parent_chances(life_table, previous_generation, lineage_matrix, current_time);
        
-        % for debugging purposes
-        previous_generation_copy = previous_generation;
        
        for k = 1:sample_size
    
-           age_of_sample = lineage_matrix(current_time, k, 2) 
+           age_of_sample = lineage_matrix(current_time, k, 2);
            
            if (age_of_sample > 0)
                 
               %note: age_of_sample == 3 means we'd be looking up cohort 3+1
               %IF we wanted age 3, but we want age 2 so we look up cohort 3
-              number_of_cohort_members_remaining = length(previous_generation{age_of_sample}(:))
-              random_index = randi(number_of_cohort_members_remaining)
+              number_of_cohort_members_remaining = length(previous_generation{age_of_sample}(:));
+              random_index = randi(number_of_cohort_members_remaining);
               
               lineage_matrix(current_time - 1, k, 1) = lineage_matrix(current_time, k, 1);
               lineage_matrix(current_time - 1, k, 2) = age_of_sample - 1;
@@ -56,23 +56,23 @@ function  [mrca, complete_genealogy, coal_events] = calc_mrca_ez(genealogy_m, ge
               lineage_matrix(current_time - 1, k, 3) = previous_generation{age_of_sample}(random_index); 
               
               % reminder: ages are from 0 to x but our array is 1 to x+1
-              previous_generation{age_of_sample}(random_index) = []
-              dummy = 74
+              previous_generation{age_of_sample}(random_index) = [];
+            
            end
            
            % NaN == NaN evaluates to false, so we need to use isnan()
            if (isnan(age_of_sample)) % do nothing; a merger has already taken place
              %  lineage_matrix(current_time - 1, k, 1) = lineage_matrix(current_time, k, 1);
-               lineage_matrix(current_time - 1, k, 1) = NaN
-               lineage_matrix(current_time - 1, k, 2) = NaN
-               lineage_matrix(current_time - 1, k, 3) = NaN
+               lineage_matrix(current_time - 1, k, 1) = NaN;
+               lineage_matrix(current_time - 1, k, 2) = NaN;
+               lineage_matrix(current_time - 1, k, 3) = NaN;
            end 
            
        end
        
        for k = 1:sample_size
-           age_of_sample = lineage_matrix(current_time, k, 2) 
-           dummy = 5
+           age_of_sample = lineage_matrix(current_time, k, 2);
+           
            
            if (age_of_sample == 0)
                
@@ -86,7 +86,7 @@ function  [mrca, complete_genealogy, coal_events] = calc_mrca_ez(genealogy_m, ge
                
                % if the new parent is already in the sample, coalescent!
                
-               is_coalescent = false
+               is_coalescent = false;
                
                % O(k^2) :( maybe speed this up via a faster equality check?
                for potential_match = 1:sample_size
@@ -94,11 +94,11 @@ function  [mrca, complete_genealogy, coal_events] = calc_mrca_ez(genealogy_m, ge
                        (lineage_matrix(current_time - 1, potential_match, 3) == parental_index ))
                       
                         % the new lineage of k is the lineage of the match
-                        lineage_matrix( current_time - 1, k, 1 ) = lineage_matrix(current_time - 1, potential_match, 1)
-                        lineage_matrix( current_time - 1, k, 2 ) = NaN
-                        lineage_matrix( current_time - 1, k, 3 ) = NaN
+                        lineage_matrix( current_time - 1, k, 1 ) = lineage_matrix(current_time - 1, potential_match, 1);
+                        lineage_matrix( current_time - 1, k, 2 ) = NaN;
+                        lineage_matrix( current_time - 1, k, 3 ) = NaN;
                         
-                        is_coalescent = true
+                        is_coalescent = true;
                         break
                         
                    end
@@ -110,9 +110,8 @@ function  [mrca, complete_genealogy, coal_events] = calc_mrca_ez(genealogy_m, ge
                if (is_coalescent == false)
                    
                    lineage_matrix(current_time - 1, k, 1) = lineage_matrix(current_time, k, 1);
-                   lineage_matrix(current_time - 1, k, 2) = parental_age
-                   lineage_matrix(current_time - 1, k, 3) = parental_index
-                   dummy = 2
+                   lineage_matrix(current_time - 1, k, 2) = parental_age;
+                   lineage_matrix(current_time - 1, k, 3) = parental_index;
                end
            end
        end
@@ -121,16 +120,16 @@ function  [mrca, complete_genealogy, coal_events] = calc_mrca_ez(genealogy_m, ge
        % rewrite this by using a counter after is_coalescent == true
        raw_lineage_numbers = (lineage_matrix(current_time -1, :, 1));
        actual_lineage_numbers = raw_lineage_numbers(isfinite(raw_lineage_numbers));
-       dummy = 1;
+
        if (length(actual_lineage_numbers) == 1)
-           mrca = total_time - current_time + 1
+           mrca = total_time - current_time + 1;
            break;
        end
        
       
     end
     
-    disp(lineage_matrix)
+    %disp(lineage_matrix)
     
 end
 
@@ -145,7 +144,7 @@ function lineage_matrix = initialize_lineage_matrix(k_vector, total_time)
 
     lineage_id = 1;
     for i = 1:length(k_vector)
-        for j = 1:sample_size(i)
+        for j = 1:k_vector(i)
             lineage_matrix(end, lineage_id, 1) = lineage_id;
             % we're setting age of sample here
             lineage_matrix(end, lineage_id, 2) = i - 1;
@@ -187,8 +186,8 @@ function offspring_assignments = generate_parent_chances(life_table, previous_ge
     
    %  the number of age_zero in the sample, 
    % TODO non-critical not sure why debugger shows lineage_submatrix as zero
-   lineage_submatrix = lineage_matrix(lineage_matrix(current_time, :, 2) == 0)
-   count_of_currently_age_zero = length(lineage_submatrix(1,:,1))
+   lineage_submatrix = lineage_matrix(lineage_matrix(current_time, :, 2) == 0);
+   count_of_currently_age_zero = length(lineage_submatrix(1,:,1));
  %   count_of_currently_age_zero_in_sample = 1
 
     number_of_age_cohorts = length(previous_generation);

@@ -31,7 +31,7 @@ fprintf('Life table file: %s\n\n',file_path_name);
 % rescale life table so that population size is constant through time
 rescale = true;
 
-[leslie_matrix,age_classes,scaling] = life_to_leslie(file_path_name,rescale);
+[leslie_matrix,age_classes,scaling, life_table_m] = life_to_leslie(file_path_name,rescale);
 
 if rescale == true
     fprintf('original life table had growth rate of %f\n', scaling);
@@ -132,7 +132,7 @@ for iter=1:iterations
 
     % Track the lineages to an MRCA
 
-    [mrca,complete_genealogy,coal_events] = calc_mrca_b(genealogy_m, leslie_matrix, age_dist_m);
+    [mrca,complete_genealogy,coal_events] = calc_mrca_ez(genealogy_m, life_table_m, age_dist_m);
 
     if mrca == number_generations
         no_mrca_random = no_mrca_random + 1; % increment counter
@@ -159,6 +159,8 @@ mrca_zero = zeros(1,iterations); % allocate space for results
 
 for iter=1:iterations
 
+    iter
+    
     initial_values = terminal_indices(lineage_count,age_dist_m,age_i); % samples lineage from all lineages in the present. 
 
     genealogy_m = -1*ones(number_generations, lineage_count, 2); % initialize the 3-D genealogy matrix *** need to describe the rows, cols and pages!
@@ -167,7 +169,7 @@ for iter=1:iterations
 
     % Track the lineages to an MRCA
 
-    [mrca,complete_genealogy,coal_events] = calc_mrca_b(genealogy_m, leslie_matrix, age_dist_m);
+    [mrca,complete_genealogy,coal_events] = calc_mrca_ez(genealogy_m, life_table_m, age_dist_m);
 
     if mrca == number_generations
         no_mrca_zero = no_mrca_zero + 1; % increment counter

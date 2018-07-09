@@ -1,4 +1,4 @@
-function [leslie_matrix,ages,scaling] = life_to_leslie(file_path_name,rescale)
+function [leslie_matrix,ages,scaling, life_table_m] = life_to_leslie(file_path_name,rescale)
 
 % function [leslie_matrix,ages,scaling] = life_to_leslie()
 
