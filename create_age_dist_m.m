@@ -13,12 +13,5 @@ for i = 2:length(time)
     age_dist_m(:,i) = round(leslie_matrix*age_dist_m(:,i-1)); %applies the leslie matrix to the previous age distribution for each time step
     
     total_population_v(i) = sum(age_dist_m(:,i)); %adds the total population at time step i to the total population vector
-%     stable = 0;
-%     if i>3
-%     while isequal(stable,0)
-%         if isequal(age_dist_m(:,i),age_dist_m(:,i-1)) && isequal(age_dist_m(:,i),age_dist_m(:,i-2)) && isequal(age_dist_m(:,i),age_dist_m(:,i-3))
-%         stable = i;
-%         end
-%     end
-%     end
+    if isequal(
 end
