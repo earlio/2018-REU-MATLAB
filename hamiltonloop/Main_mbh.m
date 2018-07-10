@@ -133,6 +133,7 @@ for iter=1:iterations
     % Track the lineages to an MRCA
 
     [mrca,complete_genealogy,coal_events] = calc_mrca_ez(genealogy_m, life_table_m, age_dist_m);
+ %   [mrca,complete_genealogy,coal_events] = calc_mrca_b(genealogy_m, leslie_matrix, age_dist_m);
 
     if mrca == number_generations
         no_mrca_random = no_mrca_random + 1; % increment counter
@@ -170,6 +171,7 @@ for iter=1:iterations
     % Track the lineages to an MRCA
 
     [mrca,complete_genealogy,coal_events] = calc_mrca_ez(genealogy_m, life_table_m, age_dist_m);
+ %   [mrca,complete_genealogy,coal_events] = calc_mrca_b(genealogy_m, leslie_matrix, age_dist_m);
 
     if mrca == number_generations
         no_mrca_zero = no_mrca_zero + 1; % increment counter

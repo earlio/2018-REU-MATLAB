@@ -1,8 +1,11 @@
-% function  [mrca, complete_genealogy, coal_events] = build_lineage_matrix(sample_vector, total_time, generational_demographics, life_table, ...
-%     final_population, full_history_table)
 
+% INPUTS:
+% genealogy_m - contains number and ages of sampled lineages
+% life table - contains fecundity data
+% generational_demographics - contains population data
 function  [mrca, complete_genealogy, coal_events] = calc_mrca_ez(genealogy_m, life_table, generational_demographics)
 
+    
 
 
     % we'll make total_time = 5000 later
