@@ -22,7 +22,7 @@
 
 %EXAMPLE 2
 population_0 = [30, 25, 15, 30]; %example initial population vector
-number_generations = 500; %example number of generations
+number_generations = 200; %example number of generations
 leslie_matrix = [0 1 1.1 1.2; 0.6 0 0 0; 0 0.5 0 0; 0 0 0.4 0]; %sample leslie matrix
 lineage_count = 2; %example number of lineages to track 
 %life_table = [0 0.6 0; 1 0.5 1; 2 0.25 1.1; 3 0 1.2];
