@@ -13,5 +13,16 @@ for i = 2:length(time)
     age_dist_m(:,i) = round(leslie_matrix*age_dist_m(:,i-1)); %applies the leslie matrix to the previous age distribution for each time step
     
     total_population_v(i) = sum(age_dist_m(:,i)); %adds the total population at time step i to the total population vector
-    if isequal(
+    
+    if total_population_v(i) >= 10^10
+        age_dist_m = age_dist_m(:,1:i);
+        disp("Warning: Population size is too high") %ends the creation of the matrix
+        break
+    end
+    if isequal(age_dist_m(:,i),age_dist_m(:,i-1))
+        if isequal(age_dist_m(:,i),age_dist_m(:,i-2)) && isequal(age_dist_m(:,i),age_dist_m(:,i-3))
+        age_dist_m = age_dist_m(:,1:i);
+        break %breaks the loop at a steady state
+        end
+    end
 end
