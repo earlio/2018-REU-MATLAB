@@ -1,5 +1,5 @@
 function [leslie_matrix,ages,scaling] = life_to_leslie_2(file_path_name,rescale)
-
+%ADD INFO ABOUT LIFE TABLE REQUIREMENTS AND INCLUDE AND EXAMPLE
 % function [leslie_matrix,ages,scaling] = life_to_leslie()
 
 % A function to input a life table and produce a Leslie matrix that can be used to simulate population demography over time. 
