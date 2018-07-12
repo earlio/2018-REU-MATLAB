@@ -77,4 +77,4 @@ if isequal(time_count,generations-1)
 end
 end
 complete_genealogy = genealogy_m;
-mrca = time_count;
+mrca = time_count+1;
