@@ -1,5 +1,37 @@
 function [mrca, complete_genealogy, coal_events] = calc_mrca_b(genealogy_m, leslie_matrix, age_dist_m)
 
+%Inputs:
+%1. genealogy_m - a number_generations x lineage_count x 2 matrix. At the
+%time of input, the matrix should be filled with a null value of -1 at
+%every index except it should be filled with the indices and ages of
+%individuals in it's final surface/row.
+%2. leslie_matrix -  a leslie matrix corresponding to the input life table,
+%generated using the life_to_leslie function
+%3. age_dist_m - the age distribution/demographic matrix containing the
+%population of each age class over the number of generations
+
+%this function traces a preset number of lineages (lineage_count) back in
+%time to find a most recent common ancestor. The function is written
+%iteratively and it's loops are broken if a common ancestor is reached. 
+
+%Outputs: 
+%1. mrca - the time to most recent common ancestor. Mrca is equal to the maximum
+%number of generations if no most recent common ancestor is reached. 
+
+%2. complete_genealogy - a completed genealogy_m. Page one contains the indices of
+%individuals in each lineage for every generation until a most recent
+%common ancestor is reached. Page two contains the ages of individuals in
+%each lineage for every generation until a most recent common ancestor is
+%reached. When an MRCA is reached, the lineages will converge and all
+%remaining cells will be filled with "-1".
+
+
+%3. coal_events - coal events is a vector (when lineage_count = 2) or a matrix (when lineage_count > 2)  
+% where the first column is records the lineage lost in a coalescent event,
+% the second column is the remaining lineage after a coalescent event, and
+% the third column is the generation count when the coalescent event
+% occurs. 
+
 generations = size(genealogy_m,1); %establish the dimentions of the genealogy_m matrix to set up the loops
 lineages = 1:size(genealogy_m,2); %establish the dimentions of the genealogy_m matrix to set up the loops
 

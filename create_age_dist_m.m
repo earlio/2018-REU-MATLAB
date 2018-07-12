@@ -1,4 +1,28 @@
 function [age_dist_m] = create_age_dist_m(number_generations, population_0, leslie_matrix,burn_in_gens)
+%Inputs: 
+%1. number_generations - The preset number of generations that we are testing the data on
+%2. population_0 - a vector with the initial population of individuals for
+%each age class
+%3. leslie_matrix - a leslie matrix corresponding to the input life table,
+%generated using the life_to_leslie function
+%4. burn-in-gens - the number of generations required for the population to
+%stabilize
+
+% This function generates a burn-in matrix to allow the population to
+% stabilize, and an age distribution matrix which contains the distribution
+% of individuals among the age classes over the preset number of
+% generations. The age distribution matrix begins with the final column of
+% the burn-in matrix. This function also displays warnings if the
+% population size of an age class grows too large, and a warning of when
+% the population stabilizes to ensure the number of burn-in generations is
+% correctly set. 
+
+
+%Outputs:
+%1. age_dist_m - The only output is the demographic matrix/age distribution matrix
+
+
+
 time = 1:number_generations; %creates a time vector using the set number of generations
 
 total_population_0 = sum(population_0); %calculates the total population at time = 0 by adding the values of population_0

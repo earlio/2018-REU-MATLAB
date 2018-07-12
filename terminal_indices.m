@@ -1,5 +1,23 @@
 function [indices] = terminal_indices(lineage_count, age_dist_m, age)
-%returns a given number of indices in the terminal population
+%Inputs:
+%1. lineage_count - the preset number of lineages that the user wants to
+%sample
+%2. age_dist_m - the age distribution/demographic matrix containing the
+%population of each age class over the number of generations
+%3. age - should be -1 if #lineage_count random individuals are to be
+%selected, or a given age >= 0 if #lineage_count individuals from that
+%specific age class are to be sampled. 
+
+%This function randomly selects indices in the final generation of the
+%demographic matrix to begin the lineage trace. If the age input is -1 it
+%randomly selects #lineage_count individuals randomly (without
+%replacement). If the age input is 0 or higher it randomly selects
+%individuals from that given age class
+
+%Outputs:
+%1. indices - indices is a 2xlineage_count matrix which contains both the
+%index of each selected individual and its age. The first row contains the
+%indices and the second row contains the ages. 
 
 indices = zeros(2, lineage_count); %initializes the indices matrix which will fill the top surface of the genealogy matrix
 [age_classes,generations] = size(age_dist_m); %measures size of age_dist_m
