@@ -72,9 +72,9 @@ time_count = time_count + 1; %add one to time
 if isequal(length(lineages),1)
     break %breaks the loop if the number of lineages reaches 1(at an mrca)
 end
-if isequal(time_count,generations-1)
+if isequal(time_count,generations)
     break
 end
 end
 complete_genealogy = genealogy_m;
-mrca = time_count+1;
+mrca = time_count;
