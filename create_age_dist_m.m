@@ -7,8 +7,10 @@ total_population_v(1) = total_population_0; %sets the first entry of the total p
 
 %% Burn-In %%
 warning = 0;
-burn_in_m = zeros(length(population_0),50);
+burn_in_m = zeros(length(population_0),burn_in_gens);
 burn_in_m(:,1) = population_0;
+size(burn_in_m)
+size(leslie_matrix)
 for i = 2:burn_in_gens
     burn_in_m(:,i) = round(leslie_matrix*burn_in_m(:,i-1));
     total_population_v(i) = sum(burn_in_m(:,i));
