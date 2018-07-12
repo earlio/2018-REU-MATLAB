@@ -39,7 +39,7 @@ function  [mrca, complete_genealogy, coal_events] = calc_mrca_ez(genealogy_m, li
     for current_time = (total_time):-1:2
         
         previous_generation = interpolate_previous_population( generational_demographics, current_time);
-        offspring_assignments = generate_parent_chances(life_table, previous_generation, lineage_matrix, current_time);
+        offspring_assignments = generate_parent_chances(life_table, previous_generation, lineage_matrix, current_time, generational_demographics);
        
        
        for k = 1:sample_size
@@ -182,16 +182,17 @@ function previous_generation = interpolate_previous_population(generational_demo
     
 end
 
-function offspring_assignments = generate_parent_chances(life_table, previous_generation, lineage_matrix, current_time)
-    % returns 2 rows: row 1 = actual age, second row = 1st, 2nd, 4th of
-    % that age; each column is a 'raffle ticket' in Darwin's lottery.
+% This function fills a hypothetical urn with chances for each member of a 
+% population lineage to be a parent of a currently-age-zero sample lineage.
+% returns a 2-by-N matrix:
+% - row 1 = age of parent, row 2 = age-cohort-specific I.D. of parent
+function offspring_assignments = generate_parent_chances(life_table, previous_generation, lineage_matrix, current_time,generational_demographics)
+    
+    % a vector of fecundities by age extracted from the life table
     fecundity_by_age = life_table(:,3);
     
-   %  the number of age_zero in the sample, 
-   % TODO non-critical not sure why debugger shows lineage_submatrix as zero
-   lineage_submatrix = lineage_matrix(lineage_matrix(current_time, :, 2) == 0);
-   count_of_currently_age_zero = length(lineage_submatrix(1,:,1));
- %   count_of_currently_age_zero_in_sample = 1
+   %  the number of age-zero lineages in the current population
+   count_of_currently_age_zero = generational_demographics(current_time, 1);
 
     number_of_age_cohorts = length(previous_generation);
     

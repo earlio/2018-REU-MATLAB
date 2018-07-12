@@ -25,7 +25,7 @@ fprintf('%s\n\n',date_string);
 %% open file with life table, get Leslie matrix for population growth
 
 % provide path name to life table file
-file_path_name = 'Sample_LT1.x4sx';
+file_path_name = 'Sample_LT4.xlsx';
 fprintf('Life table file: %s\n\n',file_path_name);
 
 % rescale life table so that population size is constant through time
