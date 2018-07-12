@@ -42,8 +42,8 @@ end
 
 
 
-total_pop_0 = 200;
-population_0 = (total_pop_0/age_classes)*ones(1,age_classes); %initial population vector, sets each initial population to 10 for now.
+age_class_pop = 100; %an initial population to be added to each age class
+population_0 = age_class_pop*ones(1,age_classes); %initial population vector, sets each initial population to 10 for now.
 number_generations = 300; %number of generations,
 lineage_count = 2; %number of lineages to track, k=2 for now
 number_iterations = 1; %number of times the functions are run

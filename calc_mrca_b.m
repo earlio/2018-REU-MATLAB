@@ -37,21 +37,21 @@ for g = generations:-1:2 %iterate over the generations
 %                 end
 %             end
 %             end
-            genealogy_m(g-1,k,1) = randi([options_lower(parent_age+1) options_upper(parent_age+1)]); %assign a parent from the chosen age class
+            genealogy_m(g-1,k,1) = options_lower(parent_age+1) + round((options_upper(parent_age+1)-options_lower(parent_age+1))*rand); %assign a parent from the chosen age class
             genealogy_m(g-1,k,2) = parent_age; %set the age of the individual in the previous generation.
             
         else %case where the individual is not a newborn and age-1 ancestor must be chosen
             
             age_old = genealogy_m(g,k,2); %set an age variable equal to the current age in lineage k
             genealogy_m(g-1,k,2) = age_old-1; %set the age of the individual in the previous generation.
-            genealogy_m(g-1,k,1) = randi([options_lower(age_old) options_upper(age_old)]);
+            genealogy_m(g-1,k,1) = options_lower(age_old+1) + round((options_upper(age_old+1)-options_lower(age_old+1))*rand);
             if k>1    
                 for r = 1:k-1
                     if isequal(genealogy_m(g-1,r,2),0)
                         break
                     else
                     while isequal(genealogy_m(g,r,2),genealogy_m(g,k,2)) && isequal(genealogy_m(g-1,r,1),genealogy_m(g-1,k,1))
-                        genealogy_m(g-1,k,1) = randi([options_lower(age_old) options_upper(age_old)]);
+                        genealogy_m(g-1,k,1) = options_lower(age_old+1) + round((options_upper(age_old+1)-options_lower(age_old+1))*rand);
                     end               
                     end
                 end
