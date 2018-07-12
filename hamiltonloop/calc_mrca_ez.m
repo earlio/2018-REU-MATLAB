@@ -132,7 +132,7 @@ function  [mrca, complete_genealogy, coal_events] = calc_mrca_ez(genealogy_m, li
       
     end
     
-    %disp(lineage_matrix)
+   % disp(lineage_matrix)
     
 end
 

@@ -25,11 +25,11 @@ fprintf('%s\n\n',date_string);
 %% open file with life table, get Leslie matrix for population growth
 
 % provide path name to life table file
-file_path_name = 'Sample_LT1.xlsx';
+file_path_name = 'Sample_LT1.x4sx';
 fprintf('Life table file: %s\n\n',file_path_name);
 
 % rescale life table so that population size is constant through time
-rescale = true;
+rescale = false;
 
 [leslie_matrix,age_classes,scaling, life_table_m] = life_to_leslie(file_path_name,rescale);
 
@@ -241,6 +241,43 @@ end % for iter
 fprintf('----------------------------------------------------\n');
 
 
+function [number_generations, age_dist_m] = adjust_age_dist_m(burn_cycle_age_dist_m, age_dist_m)
+    
+
+    sizeof_age_dist_m = size(age_dist_m, 2);
+    sizeof_burn_cycle_age_dist_m = size(burn_cycle_age_dist_m, 2);
+
+    
+    % did we make it out of the burn cycle?
+    for i = 1:sizeof_burn_cycle_age_dist_m
+
+        current_slice = burn_cycle_age_dist_m(:, i);
+        next_slice = burn_cycle_age_dist_m(:, i + 1);
+        
+        if (isequal(current_slice, next_slice)) 
+            number_generations = i;
+            age_dist_m = burn_cycle_age_dist_m(:,1:i);
+            fprintf("burn cycle too long: age_dist_m truncated at t = %d due to population stabilization.\n", i)
+            return;
+        end
+    end
+    
+    for i = 1:sizeof_age_dist_m
+        
+        current_slice = age_dist_m(:, i);
+        next_slice = age_dist_m(:, i + 1);
+        
+        if (isequal(current_slice, next_slice)) 
+            number_generations = i;
+            age_dist_m = age_dist_m(:,1:i);
+            fprintf("age_dist_m truncated at t = %d due to population stabilization.\n", i)
+            return;
+        end
+    end    
+    % no adjustement required
+    number_generations = sizeof_age_dist_m;
+    age_dist_m = age_dist_m;
+end
 
 function [parent] = sample_lineage(age)
 
@@ -266,4 +303,3 @@ function [parent] = sample_lineage(age)
     disp(parent);
     
 end
-
