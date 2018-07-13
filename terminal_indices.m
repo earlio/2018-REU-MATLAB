@@ -6,7 +6,7 @@ function [indices] = terminal_indices(lineage_count, age_dist_m, age)
 %population of each age class over the number of generations
 %3. age - should be -1 if #lineage_count random individuals are to be
 %selected, or a given age >= 0 if #lineage_count individuals from that
-%specific age class are to be sampled. 
+%specific age class are to be sampled.
 
 %This function randomly selects indices in the final generation of the
 %demographic matrix to begin the lineage trace. If the age input is -1 it
@@ -17,7 +17,7 @@ function [indices] = terminal_indices(lineage_count, age_dist_m, age)
 %Outputs:
 %1. indices - indices is a 2xlineage_count matrix which contains both the
 %index of each selected individual and its age. The first row contains the
-%indices and the second row contains the ages. 
+%indices and the second row contains the ages.
 
 indices = zeros(2, lineage_count); %initializes the indices matrix which will fill the top surface of the genealogy matrix
 [age_classes,generations] = size(age_dist_m); %measures size of age_dist_m
@@ -27,7 +27,7 @@ for a = 2:size(age_dist_m)
     options_lower = [options_lower sum(age_dist_m(1:a-1,end))+1]; %construct a vector of lower bounds
     options_upper = [options_upper sum(age_dist_m(1:a,end))]; %construct a vector of upper bounds
 end
-scaling = sum(age_dist_m(1:age_classes,generations)); %scale factor for age class sizes       
+scaling = sum(age_dist_m(1:age_classes,generations)); %scale factor for age class sizes
 probabilities = age_dist_m(1:age_classes,generations)./scaling; %scales the age class sizes as probabilities
 stored_age = age; %stores the age for each iteration of the loop
 
@@ -43,7 +43,6 @@ for k = 1:lineage_count
         end
     end
     indices(1,k) = options_lower(age+1) + round((options_upper(age+1)-options_lower(age+1))*rand);
-    %indices(1,k) = options_lower(age+1) + randi(age_dist_m(age+1,generations)); %set the index
     indices(2,k) = age;
     if k>1
         for r = 1:k-1
@@ -55,8 +54,9 @@ for k = 1:lineage_count
                         break %the loop is broken when an age is assigned
                     end
                 end
-                indices(1,k) = options_lower(age+1) + round((options_upper(age+1)-options_lower(age+1))*rand); %reset the index if it has already been used
-                indices(2,k) = age; %set the age
+                indices(1,k) = options_lower(age+1) + round((options_upper(age+1)-options_lower(age+1))*rand);
+                indices(2,k) = age;
+                
             end
         end
     end
