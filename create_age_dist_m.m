@@ -45,6 +45,7 @@ for i = 2:burn_in_gens
         warning = 1;
     else
         burn_in = false;
+        fprintf("The Population has not reached steady state after %d burn-in generations \n", burn_in_gens);
     end
 size_check_v = burn_in_m(:,i) > (2^50)*ones(size(burn_in_m,1),1); 
     if isequal(size_check_v,zeros(size(burn_in_m,1),1) == 0) && (isequal(warning,0))
