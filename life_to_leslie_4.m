@@ -1,4 +1,4 @@
-function [life_table_m,leslie_matrix,ages,orig_lambda,mod_lambda,CV_fecundity,age_first_reproduction,adult_lifespan] = life_to_leslie_4(file_path_name,scale)
+function [life_table_m,leslie_matrix,ages,orig_lambda,mod_lambda,CV_fecundity,G,alpha, AL] = life_to_leslie_4(file_path_name,scale)
 
     % A function to input a life table and produce a Leslie matrix that can be used to simulate population demography over time. 
 
@@ -38,6 +38,9 @@ function [life_table_m,leslie_matrix,ages,orig_lambda,mod_lambda,CV_fecundity,ag
     % mod_lambda - real number pop growth rate after rescaling
     % CV_fecundity - scalar real number coefficient of variance in age-specific
     %   fecundity
+    % G - scalar real number generation length, G, or mean age of a parent
+    % alpha - scalar real number age when bx first > zero
+    % AL - integer adult lifespan
 
     
     % use importdata to read life table file since it does not require
@@ -84,18 +87,26 @@ function [life_table_m,leslie_matrix,ages,orig_lambda,mod_lambda,CV_fecundity,ag
         mod_lambda = lambda(2);
     end
 
+    
+    % compute the generation length, G, or mean age of a parent
+    products = life_table_m(:,2).*life_table_m(:,3); % get product of (Sx)x(Bx) for each age class
+    G = sum(products); % sum over all age classes
 
+    % find age when bx first > zero
+    counter = 1; % counter
+    while life_table_m(counter,3) == 0
+        counter = counter + 1;
+    end
+    alpha = counter; % age of reproductive maturity
+    
+    % compute adult lifespan
+    AL = ages - alpha + 1;
     
     % compute coefficient of variation of age-specific fecundity
     var_fecundity = var(leslie_matrix(1,:));
     mean_fecundity = mean(leslie_matrix(1,:));
     CV_fecundity = sqrt(var_fecundity)/mean_fecundity;
     
-%compute age at first reproduction and adult lifespan      
+    
+    
 
-age = 1;
-while (isequal(life_table_m(age,3),0))
-    age = age +1 ;
-end
-age_first_reproduction = age-1;
-adult_lifespan = ages-age_first_reproduction+1;
