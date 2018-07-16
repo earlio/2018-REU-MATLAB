@@ -50,6 +50,13 @@ function [life_table_m,leslie_matrix,ages,orig_lambda,mod_lambda,CV_fecundity,G,
     % data cell contains numeric life table
     life_table_m = file_contents.data;
 
+    % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % %%% Scale  age
+    life_table_m = scale_age(life_table_m, 1);
+    % %%% Scale  age
+    % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    
     % determine the number of rows of the life_table to create a correctly sized leslie matrix
     [ages] = size(life_table_m,1); 
 
@@ -65,7 +72,7 @@ function [life_table_m,leslie_matrix,ages,orig_lambda,mod_lambda,CV_fecundity,G,
 
     
     % get eigenvalues of the original Leslie matrix, leading postive eigenvalue is equal to pop growth rate
-    lambda = eig(leslie_matrix); 
+    lambda = eig(leslie_matrix);
 
     if lambda(1) > 0
         orig_lambda = lambda(1);
