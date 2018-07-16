@@ -24,11 +24,7 @@ function [new_life_table]  = scale_age(original_life_table, number_of_years_to_s
 
     
     
-    plot(original_age_vector, original_fecundity_vector);
-    
-
-    
-
+    plot(f, original_age_vector, original_fecundity_vector);
     
     startValue = 1;
     endValue = count_of_age_cohorts;
@@ -39,9 +35,17 @@ function [new_life_table]  = scale_age(original_life_table, number_of_years_to_s
     
     recalculated_growth_rate = sum(new_fecundity_vector .* survivorship_curve_vector)
     
+    % we'll scale up the new fecundity vector so that the new growth rate
+    % is the same as the old growth rate
     
-    new_life_table = original_life_table;
-    
+    new_fecundity_vector = new_fecundity_vector .* (raw_growth_rate/recalculated_growth_rate);
+
+   % safe to delete; checks that new growth rate is the same as old
+   % final_growth_rate = sum(new_fecundity_vector .* survivorship_curve_vector);
+   
+   
+   original_life_table(:,3) = new_fecundity_vector;
+   new_life_table = original_life_table;
    % old_fecundity_vector = original_life_table
 
 % extract a formula from the fecundity vector
