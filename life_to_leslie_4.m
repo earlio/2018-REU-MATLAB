@@ -52,7 +52,7 @@ function [life_table_m,leslie_matrix,ages,orig_lambda,mod_lambda,CV_fecundity,G,
 
     % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % %%% Scale  age
-   % life_table_m = scale_age(life_table_m, 1);
+    life_table_m = scale_age(life_table_m, 3);
     % %%% Scale  age
     % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
