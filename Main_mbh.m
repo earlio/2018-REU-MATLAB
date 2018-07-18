@@ -5,7 +5,7 @@ rng('shuffle'); % random seed for random number generator
 % declare main glaobal variables for program
 total_pop_N = 500; % size of population for all age classes
 
-number_generations = 1200; % number of generations
+number_generations = 3000; % number of generations
 
 burn_in_gens = 102; % number of generations for burn in of population growth
 

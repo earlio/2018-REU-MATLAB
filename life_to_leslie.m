@@ -67,8 +67,6 @@ function [life_table_m,leslie_matrix,ages,orig_lambda,mod_lambda,CV_fecundity,G,
     % create a square leslie matrix with dimension = number of ages in the life table
     leslie_matrix = diag(life_table_m(1:(end - 1), 2), -1);
     leslie_matrix(1,:) = transpose(life_table_m(:,3));
-    % DEBUG LINE; calc_mrca_b trhows an error without the zero below.
-    leslie_matrix(1, end) = 0;
     
 
     % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
