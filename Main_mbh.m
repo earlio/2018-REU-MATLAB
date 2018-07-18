@@ -37,7 +37,7 @@ fprintf('Life table file: %s\n\n',file_path_name);
 %scale = 0.98;
 scale = 1.0;
 
-[life_table_m,leslie_matrix,age_classes,orig_lambda,mod_lambda,CV_fecundity,G,alpha,AL] = life_to_leslie_4(file_path_name,scale);
+[life_table_m,leslie_matrix,age_classes,orig_lambda,mod_lambda,CV_fecundity,G,alpha,AL] = life_to_leslie(file_path_name,scale);
 
 fprintf('life table has a population growth rate of %f\n', orig_lambda);
 fprintf('(set scale to 1/lambda or = %f for original rate)\n\n', 1/orig_lambda);
