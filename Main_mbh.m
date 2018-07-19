@@ -196,31 +196,3 @@ end % for iter
     fprintf('number of simulations that reached coalescence: %g of %g \n', num_non_zero_sims_random, iterations);
 
 fprintf('----------------------------------------------------\n');
-
-
-
-function [parent] = sample_lineage(age)
-
-
-    % sample one lineage given an age class and a generation
-    age = parent_age_class; % age of lineage to find
-    
-    generation = numgen - 1; % generation of lineage to find
-    
-    found_one = 0;
-    while found_one == 0
-
-        index = randi(total_pop_sizes(generation,1)); % get random integer 1:total population size at time numgen
-        
-        if pop_in_present(1,index) == age % lineage must be given age 
-            parent = index;
-            found_one = 1;
-        else
-            found_one = 0; % keep looking for age zero individual
-        end
-    end % while
-
-    disp(parent);
-    
-end
-
