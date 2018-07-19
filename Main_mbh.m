@@ -5,15 +5,24 @@ rng('shuffle'); % random seed for random number generator
 % declare main glaobal variables for program
 total_pop_N = 500; % size of population for all age classes
 
+<<<<<<< HEAD
 number_generations = 5000; % number of generations
 
 burn_in_gens = 50; % number of generations for burn in of population growth
+=======
+number_generations = 3000; % number of generations
+
+burn_in_gens = 102; % number of generations for burn in of population growth
+>>>>>>> L2Lv5
 
 lineage_count = 2; % number of lineages to sample to determine time to MRCA 
 
 iterations = 500; % number of iterations of sampling from population
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> L2Lv5
 fprintf('----------------------------------------------------\n');
 fprintf('Simulation of time to MRCA in an age-structured coalescent\n\n');
 
@@ -21,10 +30,15 @@ t = datetime('now','TimeZone','local','Format','d-MMM-y HH:mm:ss Z'); % get date
 date_string = datestr(t); % convert date and time to string
 fprintf('%s\n\n',date_string);
 
+<<<<<<< HEAD
+=======
+fprintf('Initial total population size: %g\n\n', total_pop_N);
+>>>>>>> L2Lv5
 
 %% open file with life table, get Leslie matrix for population growth
 
 % provide path name to life table file
+<<<<<<< HEAD
 file_path_name = 'Sample_LT4.xlsx';
 fprintf('Life table file: %s\n\n',file_path_name);
 
@@ -113,6 +127,58 @@ end
 % end
 % %complete_genealogy
 % %coal_events
+=======
+file_path_name = 'Sample_sage_grouse_life_table.xlsx';
+fprintf('Life table file: %s\n\n',file_path_name);
+
+% scaling factor to adjust population growth rate; 
+% set = 1/lambda for same lambda as in the life table
+% when scale = 1.0 there is no population growth (lambda = 1.0)
+% when scale > 1.0 there is negative population growth rate (lambda < 1.0)
+% when scale < 1.0 there is positive population growth rate (lambda > 1.0)
+
+%scale = 0.98;
+scale = 1.0;
+
+[life_table_m,leslie_matrix,age_classes,orig_lambda,mod_lambda,CV_fecundity,G,alpha,AL] = life_to_leslie(file_path_name,scale);
+
+fprintf('life table has a population growth rate of %f\n', orig_lambda);
+fprintf('(set scale to 1/lambda or = %f for original rate)\n\n', 1/orig_lambda);
+
+fprintf('scaling factor for population growth rate was %f\n', scale);
+fprintf('after rescaling, the population growth rate is %f\n\n', mod_lambda);
+
+fprintf('number of age classes (maximum life span, omega): %g\n', age_classes);
+fprintf('G, average age of a parent: %g\n', G);
+fprintf('alpha, age of first reproductuve maturity: %g\n\n', alpha);
+
+fprintf('coefficient of variation in age-specific fecundity: %f\n\n', CV_fecundity);
+%% Establish Age Distribution Matrix (age_dist_m)
+
+time = 1:number_generations; % create a time vector using the number of generations
+ 
+uniform_age_cohort_N = round(total_pop_N/(age_classes)); % initial uniform size for all age cohorts
+ 
+population_0 = zeros(1,age_classes);
+ 
+population_0(1:(age_classes)) = uniform_age_cohort_N;
+ 
+total_population_0 = sum(population_0(:,1));
+ 
+ 
+if total_population_0 - total_pop_N > 0
+    
+    population_0(1) = population_0(1) + (total_population_0 - total_pop_N); 
+    
+elseif total_population_0 - total_pop_N < 0
+    
+     population_0(1) =  population_0(1) + (total_pop_N - total_population_0);
+     
+end
+
+% create the demographic matrix of population size for each age class over time
+age_dist_m = create_age_dist_m(number_generations, population_0, leslie_matrix, burn_in_gens); 
+>>>>>>> L2Lv5
 
 
 % sample pairs of random age lineages
@@ -132,8 +198,12 @@ for iter=1:iterations
 
     % Track the lineages to an MRCA
 
+<<<<<<< HEAD
     [mrca,complete_genealogy,coal_events] = calc_mrca_ez(genealogy_m, life_table_m, age_dist_m);
  %   [mrca,complete_genealogy,coal_events] = calc_mrca_b(genealogy_m, leslie_matrix, age_dist_m);
+=======
+    [mrca,complete_genealogy,coal_events] = calc_mrca_b(genealogy_m, leslie_matrix, age_dist_m);
+>>>>>>> L2Lv5
 
     if mrca == number_generations
         no_mrca_random = no_mrca_random + 1; % increment counter
@@ -145,10 +215,17 @@ end % for iter
 
     % compute mean time to MRCA without iterations that did not experience
     % coalescence
+<<<<<<< HEAD
     num_non_zero_elements = iterations - no_mrca_random;
     sum_mrca_random = sum(mrca_random);
     mean_random = sum_mrca_random/num_non_zero_elements;
     median_random = median(mrca_random(1,1:num_non_zero_elements));
+=======
+    num_non_zero_sims_random = iterations - no_mrca_random;
+    sum_mrca_random = sum(mrca_random);
+    mean_random = sum_mrca_random/num_non_zero_sims_random;
+    median_random = median(mrca_random(1,1:num_non_zero_sims_random));
+>>>>>>> L2Lv5
 
 
 % sample pairs of age zero lineages
@@ -160,18 +237,30 @@ mrca_zero = zeros(1,iterations); % allocate space for results
 
 for iter=1:iterations
 
+<<<<<<< HEAD
     iter
     
+=======
+>>>>>>> L2Lv5
     initial_values = terminal_indices(lineage_count,age_dist_m,age_i); % samples lineage from all lineages in the present. 
 
     genealogy_m = -1*ones(number_generations, lineage_count, 2); % initialize the 3-D genealogy matrix *** need to describe the rows, cols and pages!
 
+<<<<<<< HEAD
     genealogy_m(end,:,1) = initial_values(1,:); genealogy_m(end,:,2) = initial_values(2,:); % set the front row to the indices and the back row to the ages specified in the initial_values matrix
 
     % Track the lineages to an MRCA
 
     [mrca,complete_genealogy,coal_events] = calc_mrca_ez(genealogy_m, life_table_m, age_dist_m);
  %   [mrca,complete_genealogy,coal_events] = calc_mrca_b(genealogy_m, leslie_matrix, age_dist_m);
+=======
+    genealogy_m(end,:,1) = initial_values(1,:);
+    genealogy_m(end,:,2) = initial_values(2,:); % set the front row to the indices and the back row to the ages specified in the initial_values matrix
+
+    % Track the lineages to an MRCA
+
+    [mrca,complete_genealogy,coal_events] = calc_mrca_b(genealogy_m, leslie_matrix, age_dist_m);
+>>>>>>> L2Lv5
 
     if mrca == number_generations
         no_mrca_zero = no_mrca_zero + 1; % increment counter
@@ -182,22 +271,37 @@ end % for iter
 
     % compute mean time to MRCA without iterations that did not experience
     % coalescence
+<<<<<<< HEAD
     num_non_zero_elements = iterations - no_mrca_zero;
     sum_mrca_zero = sum(mrca_zero);
     mean_zero = sum_mrca_zero/num_non_zero_elements;
     median_zero = median(mrca_zero(1,1:num_non_zero_elements));
+=======
+    num_non_zero_sims_zero = iterations - no_mrca_zero;
+    sum_mrca_zero = sum(mrca_zero);
+    mean_zero = sum_mrca_zero/num_non_zero_sims_zero;
+    median_zero = median(mrca_zero(1,1:num_non_zero_sims_zero));
+>>>>>>> L2Lv5
 
 
     figure;
 
     hold on;
     subplot(2,1,1);
+<<<<<<< HEAD
     hist(mrca_random); 
+=======
+    hist(mrca_random(1,1:num_non_zero_sims_random)); 
+>>>>>>> L2Lv5
     xlabel('time to MRCA - random lineage pairs')
     ylabel('Count')
 
     subplot(2,1,2);
+<<<<<<< HEAD
     hist(mrca_zero); 
+=======
+    hist(mrca_zero(1,1:num_non_zero_sims_zero)); 
+>>>>>>> L2Lv5
     xlabel('time to MRCA - age zero lineage pairs')
     ylabel('Count')
 
@@ -209,10 +313,17 @@ end % for iter
     figure;
     hold on;
     subplot(1,2,1);
+<<<<<<< HEAD
     boxplot(mrca_zero, 'Labels',{'age zero lineage pairs'});
     
     subplot(1,2,2);
     boxplot(mrca_random, 'Labels',{'random age lineage pairs'});
+=======
+    boxplot(mrca_zero(1,1:num_non_zero_sims_zero), 'Labels',{'age zero lineage pairs'});
+    
+    subplot(1,2,2);
+    boxplot(mrca_random(1,1:num_non_zero_sims_random), 'Labels',{'random age lineage pairs'});
+>>>>>>> L2Lv5
     hold off;
 
     
@@ -225,22 +336,35 @@ end % for iter
     fprintf('\n');
     
     fprintf('zero age lineages coalescence times:\n');
+<<<<<<< HEAD
     fprintf('average: %f \n', mean_zero);
     fprintf('median: %f \n', median_zero);
+=======
+    fprintf('average: %g \n', mean_zero);
+    fprintf('median: %g \n', median_zero);
+    fprintf('number of simulations that reached coalescence: %g of %g \n', num_non_zero_sims_zero, iterations);
+>>>>>>> L2Lv5
     
     fprintf('\n');
    
     fprintf('random age lineages coalescence times:\n');
+<<<<<<< HEAD
     fprintf('average: %f \n', mean_random);
     fprintf('median: %f \n', median_random);    
     
 
 
 
+=======
+    fprintf('average: %g \n', mean_random);
+    fprintf('median: %g \n', median_random);
+    fprintf('number of simulations that reached coalescence: %g of %g \n', num_non_zero_sims_random, iterations);
+>>>>>>> L2Lv5
 
 fprintf('----------------------------------------------------\n');
 
 
+<<<<<<< HEAD
 function [number_generations, age_dist_m] = adjust_age_dist_m(burn_cycle_age_dist_m, age_dist_m)
     
 
@@ -278,6 +402,8 @@ function [number_generations, age_dist_m] = adjust_age_dist_m(burn_cycle_age_dis
     number_generations = sizeof_age_dist_m;
     age_dist_m = age_dist_m;
 end
+=======
+>>>>>>> L2Lv5
 
 function [parent] = sample_lineage(age)
 
@@ -302,4 +428,9 @@ function [parent] = sample_lineage(age)
 
     disp(parent);
     
+<<<<<<< HEAD
 end
+=======
+end
+
+>>>>>>> L2Lv5
