@@ -3,9 +3,9 @@
 rng('shuffle'); % random seed for random number generator
 
 % declare main glaobal variables for program
-total_pop_N = 500; % size of population for all age classes
+total_pop_N = 1825; % size of population for all age classes
 
-number_generations = 3000; % number of generations
+number_generations = 12000; % number of generations
 
 burn_in_gens = 102; % number of generations for burn in of population growth
 
@@ -25,7 +25,7 @@ fprintf('Initial total population size: %g\n\n', total_pop_N);
 %% open file with life table, get Leslie matrix for population growth
 
 % provide path name to life table file
-file_path_name = 'Sample_sage_grouse_life_table.xlsx';
+file_path_name = 'sa2.xlsx';
 fprintf('Life table file: %s\n\n',file_path_name);
 
 % scaling factor to adjust population growth rate; 

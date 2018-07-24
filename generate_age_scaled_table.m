@@ -2,7 +2,7 @@
 % writes several alternative life tables (.xlsx) to disk with onset of
 % adulthood scaled back to various levels.
 
-file_path_name = 'Sample_Atlantic_cod_life_table';
+file_path_name = 'Sample_Pine_life_table';
 extension = '.xlsx';
 full_file_path_name = strcat(file_path_name, extension);
 
@@ -16,7 +16,7 @@ shift_point75 = floor(count_of_age_cohorts * 0.75);
 shift_point825 = floor(count_of_age_cohorts * 0.825);
 shift_point9 = floor(count_of_age_cohorts * 0.9);
 
-if (one_half == 0) 
+if (shift_point5 == 0) 
     disp("error: not enough age cohorts to push onset of fecundity back by 50% of life span. Exiting program.");
     return;
 end
