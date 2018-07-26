@@ -3,9 +3,9 @@
 rng('shuffle'); % random seed for random number generator
 
 % declare main glaobal variables for program
-total_pop_N = 1825; % size of population for all age classes
+total_pop_N = 1000; % size of population for all age classes
 
-number_generations = 12000; % number of generations
+number_generations = 6000; % number of generations
 
 burn_in_gens = 102; % number of generations for burn in of population growth
 
@@ -25,7 +25,9 @@ fprintf('Initial total population size: %g\n\n', total_pop_N);
 %% open file with life table, get Leslie matrix for population growth
 
 % provide path name to life table file
-file_path_name = 'sa2.xlsx';
+file_path = 'Sample_sage_grouse_life_table_shift_point9';
+file_extension = '.xlsx';
+file_path_name = strcat(file_path, file_extension);
 fprintf('Life table file: %s\n\n',file_path_name);
 
 % scaling factor to adjust population growth rate; 
@@ -84,9 +86,12 @@ no_mrca_random = 0; % counter for number of times no MRCA was found
 
 mrca_random = zeros(1,iterations); % allocate space for results
 
+sample_1 = [0, 0];
+sample_2 = [7, 7];
+
 for iter=1:iterations
 
-    initial_values = terminal_indices(lineage_count,age_dist_m,age_i); % samples lineage from all lineages in the present. 
+    initial_values = terminal_indices_2(lineage_count,age_dist_m, sample_1); % samples lineage from all lineages in the present. 
 
     genealogy_m = -1*ones(number_generations, lineage_count, 2); % initialize the 3-D genealogy matrix *** need to describe the rows, cols and pages!
 
@@ -121,7 +126,7 @@ mrca_zero = zeros(1,iterations); % allocate space for results
 
 for iter=1:iterations
 
-    initial_values = terminal_indices(lineage_count,age_dist_m,age_i); % samples lineage from all lineages in the present. 
+    initial_values = terminal_indices_2(lineage_count,age_dist_m, sample_2); % samples lineage from all lineages in the present. 
 
     genealogy_m = -1*ones(number_generations, lineage_count, 2); % initialize the 3-D genealogy matrix *** need to describe the rows, cols and pages!
 
@@ -147,8 +152,8 @@ end % for iter
     median_zero = median(mrca_zero(1,1:num_non_zero_sims_zero));
 
 
-    figure;
-
+    figure_name = strcat(file_path, " ", num2str(sample_1), " ", num2str(sample_2));
+    figure('Name', figure_name,'NumberTitle','off');
     hold on;
     subplot(2,1,1);
     hist(mrca_random(1,1:num_non_zero_sims_random)); 
@@ -165,7 +170,8 @@ end % for iter
 
     
     
-    figure;
+   % figure;
+    figure('Name', figure_name,'NumberTitle','off');
     hold on;
     subplot(1,2,1);
     boxplot(mrca_zero(1,1:num_non_zero_sims_zero), 'Labels',{'age zero lineage pairs'});

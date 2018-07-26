@@ -2,7 +2,7 @@
 % writes several alternative life tables (.xlsx) to disk with onset of
 % adulthood scaled back to various levels.
 
-file_path_name = 'Sample_Pine_life_table';
+file_path_name = 'Sample_loggerhead_life_table';
 extension = '.xlsx';
 full_file_path_name = strcat(file_path_name, extension);
 
@@ -32,7 +32,6 @@ make_shifted_table(life_table, shift_point825, file_name_to_print);
 
 file_name_to_print =  strcat(file_path_name, "_shift_point9", extension);
 make_shifted_table(life_table, shift_point9, file_name_to_print);
-
 
 function [] = make_shifted_table(life_table, number_of_years_to_shift, file_name_to_print)
 
