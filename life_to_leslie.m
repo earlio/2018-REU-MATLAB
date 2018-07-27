@@ -45,7 +45,7 @@ function [life_table_m,leslie_matrix,ages,orig_lambda,mod_lambda,CV_fecundity,G,
     % AL - integer adult lifespan
 
     % flag: Waples (true) vs. eigenvalue (false) population scaling
-    life_table_scaling = false;
+    life_table_scaling = true;
     
     % importdata to read life table file, works with .xlsx or .csv
     file_contents = importdata(file_path_name);

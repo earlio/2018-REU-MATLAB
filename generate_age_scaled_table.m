@@ -2,7 +2,7 @@
 % writes several alternative life tables (.xlsx) to disk with onset of
 % adulthood scaled back to various levels.
 
-file_path_name = 'Sample_loggerhead_life_table';
+file_path_name = 'Sample_penguin_life_table';
 extension = '.xlsx';
 full_file_path_name = strcat(file_path_name, extension);
 
