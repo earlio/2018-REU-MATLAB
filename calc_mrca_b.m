@@ -1,4 +1,4 @@
-function [mrca, complete_genealogy, coal_events, age_zero_counter] = calc_mrca_b(genealogy_m, leslie_matrix, age_dist_m)
+function [mrca, complete_genealogy, coal_events, age_zero_counter] = calc_mrca_b(genealogy_m, leslie_matrix, age_dist_m, options_m)
 
 %Inputs:
 %1. genealogy_m - a number_generations x lineage_count x 2 matrix. At the
@@ -52,19 +52,28 @@ age_zero_counter = zeros(1,length(lineages));
 
 for g = generations:-1:2 %iterate over the generations
     
+    options_lower = transpose(options_m(:,g,1));
+    options_upper = transpose(options_m(:,g,2));
+    
+    % %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % %%%%%%%%%%%%%%
+    
     %Establish vectors to record the bounds of each age class for each
     %generation
-    options_lower = zeros(1,size(age_dist_m,1));
-    options_upper = zeros(1,size(age_dist_m,1));
+        
+%     options_lower = zeros(1,size(age_dist_m,1));
+%     options_upper = zeros(1,size(age_dist_m,1));
+%     options_lower(1) = 1; %initializes lower bound vector for each age class
+%     options_upper(1) = age_dist_m(1,g-1); %initializes upper bound vector for each age class
+%     
+%     for a = 2:size(age_dist_m,1)
+%         options_lower(a) = sum(age_dist_m(1:a-1,g-1))+1; %concatenates vector of lower bounds
+%         options_upper(a) = sum(age_dist_m(1:a,g-1)); %concatenates vector of upper bounds
+%     end
+
     
-    options_lower(1) = 1; %initializes lower bound vector for each age class
- %ez   options_upper(1) = age_dist_m(1,g-1); %initializes upper bound vector for each age class
-    for a = 2:size(age_dist_m,1)
-        options_lower(a) = sum(age_dist_m(1:a-1,g-1))+1; %concatenates vector of lower bounds
-        options_upper(a - 1) = options_lower(a) - 1; %concatenates vector of upper bounds
-        %ez options_upper(a) = sum(age_dist_m(1:a,g-1)); %concatenates vector of upper bounds
-    end
-    options_upper(a) = sum(age_dist_m(1:a,g-1));
+    % %%%%%%%%%%%%%%%
+    % %%%%%%%%%%%%%%%%%%%%%%%%%%%s%
     
     %iterate over each lineage
     for q = 1:length(lineages) %iterate over the number of lineages
