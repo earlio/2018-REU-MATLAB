@@ -5,7 +5,7 @@ rng('shuffle'); % random seed for random number generator
 % declare main glaobal variables for program
 total_pop_N = 1000; % size of population for all age classes
 
-number_generations = 15000; % number of generations
+number_generations = 10000; % number of generations
 
 burn_in_gens = 102; % number of generations for burn in of population growth
 
@@ -26,7 +26,7 @@ fprintf('Initial total population size: %g\n\n', total_pop_N);
 
 % provide path name to life table file
 %file_path = 'Sample_sage_grouse_life_table';
-file_path = 'Sample_penguin_life_table';
+file_path = 'Sample_sage_grouse_life_table';
 
 file_extension = '.xlsx';
 file_path_name = strcat(file_path, file_extension);
@@ -92,6 +92,7 @@ mrca_random = zeros(1,iterations); % allocate space for results
 sample_1 = [0, 0];
 sample_2 = [7, 7];
 
+mrca_random_hits = 1;
 for iter=1:iterations
 
 %    initial_values = terminal_indices_2(lineage_count,age_dist_m, sample_1); % samples lineage from all lineages in the present. 
@@ -108,8 +109,9 @@ for iter=1:iterations
     if mrca == number_generations
         no_mrca_random = no_mrca_random + 1; % increment counter
     else
-        mrca_random(1,iter) = mrca;
-        
+%      mrca_random(1,iter) = mrca;
+      mrca_random(1,mrca_random_hits) = mrca;
+      mrca_random_hits = mrca_random_hits + 1;
     end
 end % for iter
 
@@ -128,6 +130,7 @@ no_mrca_zero = 0; % counter for number of times no MRCA was found
 
 mrca_zero = zeros(1,iterations); % allocate space for results
 
+mrca_zero_hits = 1;
 for iter=1:iterations
 
 %    initial_values = terminal_indices_2(lineage_count,age_dist_m, sample_2); % samples lineage from all lineages in the present. 
@@ -145,7 +148,9 @@ for iter=1:iterations
     if mrca == number_generations
         no_mrca_zero = no_mrca_zero + 1; % increment counter
     else
-        mrca_zero(1,iter) = mrca;
+     %   mrca_zero(1,iter) = mrca;
+      mrca_zero(1,mrca_zero_hits) = mrca;
+      mrca_zero_hits = mrca_zero_hits + 1;
     end
 end % for iter
 
@@ -157,16 +162,22 @@ end % for iter
     median_zero = median(mrca_zero(1,1:num_non_zero_sims_zero));
 
 
+    % Brett was concerned about the graphs of runs with too many MRCAs == 0
+  %   mrca_random(mrca_random == 0) = [];
+  %   mrca_zero(mrca_zero == 0) = [];
     figure_name = file_path;
     figure('Name', figure_name,'NumberTitle','off');
     hold on;
     subplot(2,1,1);
-    hist(mrca_random(1,1:num_non_zero_sims_random)); 
+ %  hist(mrca_random(1,1:num_non_zero_sims_random)); 
+    hist(mrca_random(1,1:mrca_random_hits));
+    
     xlabel('time to MRCA - random lineage pairs')
     ylabel('Count')
 
     subplot(2,1,2);
-    hist(mrca_zero(1,1:num_non_zero_sims_zero)); 
+ %   hist(mrca_zero(1,1:num_non_zero_sims_zero)); 
+    hist(mrca_zero(1,1:mrca_zero_hits)); 
     xlabel('time to MRCA - age zero lineage pairs')
     ylabel('Count')
 
@@ -180,10 +191,13 @@ end % for iter
     figure('Name', figure_name,'NumberTitle','off');
     hold on;
     subplot(1,2,1);
-    boxplot(mrca_zero(1,1:num_non_zero_sims_zero), 'Labels',{'age zero lineage pairs'});
     
+  % boxplot(mrca_zero(1,1:num_non_zero_sims_zero), 'Labels',{'age zero lineage pairs'});
+    boxplot(mrca_zero(1,1:mrca_zero_hits), 'Labels',{'age zero lineage pairs'});
+   
     subplot(1,2,2);
-    boxplot(mrca_random(1,1:num_non_zero_sims_random), 'Labels',{'random age lineage pairs'});
+ %   boxplot(mrca_random(1,1:num_non_zero_sims_random), 'Labels',{'random age lineage pairs'});
+    boxplot(mrca_random(1,1:mrca_random_hits), 'Labels',{'random age lineage pairs'});
      print(strcat(figure_name, ' 2'), '-dpng');
     hold off;
 
